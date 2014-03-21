@@ -1,0 +1,23 @@
+{
+	"name": "om/potrans",
+	"description": "Command line tool for translate Gettext with Google Translator API",
+	"homepage": "http://www.omdesign.cz",
+	"license": ["BSD-3-Clause"],
+	"authors": [
+		{
+			"name": "Roman Ožana",
+			"email": "roman@omdesign.cz"
+		}
+	],
+	"require": {
+		"php": ">=5.5.0"
+	},
+	"bin": ["bin/potrans"],
+	"require": {
+		"sepia/po-parser": "3.0.3",
+		"jlogsdon/cli": "v0.9.4"
+	},
+	"autoload": {
+		"classmap": ["src/"]
+	}
+}
