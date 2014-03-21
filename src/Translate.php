@@ -2,7 +2,6 @@
 namespace potrans;
 
 use om\CurlDownloader;
-use Sepia\PoParser;
 
 class Translator {
 	use CurlDownloader;
