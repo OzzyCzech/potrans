@@ -9,6 +9,8 @@ characters (M), where 1 M = 106 characters. For more information, see the [Prici
 
 For more information about Google Translate API visit https://developers.google.com/translate/
 
+See supported languages: https://developers.google.com/translate/v2/using_rest#language-params
+
 ### Getting API Key
 
 1. Go to the [Google Cloud Console](https://console.developers.google.com/).
@@ -33,7 +35,8 @@ Follow example will translate whole content of members-cs_CZ.po from Wnglish to 
 
 Another example it's about output.
 
-    potrans -k 123456789 -i example.po -v
+    potrans -k 123456789 -i example_RU.po -o path/to/output_EN.po -f ru -t en
+
 
 ## Help
 
