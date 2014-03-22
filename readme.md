@@ -29,7 +29,7 @@ For more information about Composer visit: https://getcomposer.org
 
 ## Example
 
-Follow example will translate whole content of members-cs_CZ.po from Wnglish to Czech language (default)
+Follow example will translate whole content of `members-cs_CZ.po` from Wnglish to Czech language (default)
 
     potrans -k 123456789 -i members-cs_CZ.po -v
 
