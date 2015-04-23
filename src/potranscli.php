@@ -1,11 +1,9 @@
 <?php
 namespace potrans;
 
-	/**
-	 * @author Roman Ozana <ozana@omdesign.cz>
-	 */
-namespace potrans;
-
+/**
+ * @author Roman Ozana <ozana@omdesign.cz>
+ */
 use cli\Arguments;
 use cli\Colors;
 use cli\progress\Bar;
@@ -53,7 +51,11 @@ if (!file_exists($input)) {
 }
 
 if (!is_dir(dirname($output))) {
-	die(Colors::colorize('%rDirectory "' . print_r(dirname($output)) . '" not exists %n' . PHP_EOL));
+    mkdir(dirname($output), 0755, true);
+    // Failed to create dir
+    if (!is_dir(dirname($output))) {
+	die(Colors::colorize('%rDirectory "' . dirname($output) . '" not exists %n' . PHP_EOL));
+    }
 }
 
 if (!is_dir($tmp = __DIR__ . '/../tmp')) mkdir($tmp, 0777);
@@ -68,24 +70,37 @@ try {
 	// parser
 	$po = new PoParser();
 	$entries = $po->read($input);
+        
+        $previousEntries = null;
+        if (file_exists($output)) {
+            $previousEntries = $po->read($output);
+        }
 
-	echo Colors::colorize('Translating : %r' . count($entries) . '%n entries from ' . $from . ' to ' . $to . PHP_EOL);
+	echo Colors::colorize('Translating : %b' . count($entries) . '%n entries from ' . $from . ' to ' . $to . PHP_EOL);
 	$progress = new Bar('Translate status ', count($entries));
 
 	foreach ($entries as $entry => $data) {
-		$translate = $translator->translate($entry, $from, $to);
+            $translate = "";
+            $skipped = "";
+            if (isset($previousEntries) && !empty($previousEntries[$entry]['msgstr'][0])) {
+                $skipped = "(skipped)";
+                $translate = $previousEntries[$entry]['msgstr'][0];
+            } else {
+                $translate = $translator->translate($entry, $from, $to);
+            }
+            
+            $po->update_entry($entry, $translate);
 
-		$po->update_entry($entry, $translate);
-		if ($verbose) {
-			echo $verbose ? " $entry => $translate" . PHP_EOL : null;
-		} else {
-			$progress->tick();
-		}
+            if ($verbose) {
+                echo $verbose ? " $entry => $translate $skipped" . PHP_EOL : null;
+            } else {
+                $progress->tick();
+            }
 	}
 
 	if (!$verbose) $progress->finish();
 
-	echo 'Save output to: ' . realpath($output) . PHP_EOL;
+	echo 'Save output to: ' . $output . PHP_EOL;
 	$po->write($output);
 
 } catch (\DownloadException $e) {

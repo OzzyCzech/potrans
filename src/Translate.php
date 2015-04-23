@@ -28,20 +28,21 @@ class Translator {
 	 * @return mixed|null
 	 */
 	public function translate($text, $source = 'en', $target = 'cs') {
-		$result = $this->cachedRequest(
-			self::API_URL,
-			[
-				'key' => $this->apiKey,
-				'q' => $text,
-				'source' => $source,
-				'target' => $target,
-			]
-		);
+            $result = $this->cachedRequest(
+                self::API_URL,
+                [
+                    'key' => $this->apiKey,
+                    'q' => $text,
+                    'source' => $source,
+                    'target' => $target,
+                    'format' => 'text'
+                ]
+            );
 
-		if ($result && $result = json_decode($result)) {
-			if (isset($result->data->translations[0])) {
-				return $result->data->translations[0]->translatedText;
-			}
-		}
+            if ($result && $result = json_decode($result)) {
+                if (isset($result->data->translations[0])) {
+                        return $result->data->translations[0]->translatedText;
+                }
+            }
 	}
 }

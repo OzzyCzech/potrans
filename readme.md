@@ -23,9 +23,8 @@ See full Getting Started guide: https://developers.google.com/translate/v2/getti
 
 ## Installation
 
-Install composer `curl -s http://getcomposer.org/installer | php` then run `composer install` for install all dependencies.
-
-For more information about Composer visit: https://getcomposer.org
+* Install composer `curl -s http://getcomposer.org/installer | php` then run `composer install` for install all dependencies. For more information about Composer visit: https://getcomposer.org
+* Install PHP Curl extension (php5-curl)
 
 ## Example
 
