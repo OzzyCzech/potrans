@@ -5,7 +5,7 @@ Potrans it's PHP command line tool for automatic translation of Gettext PO file 
 ## Google Translator API
 
 Google Translate API pricing is based on usage. Translation usage is calculated in millions of
-characters (M), where 1 M = 106 characters. For more information, see the [Pricing FAQ](https://developers.google.com/translate/v2/faq#pricing).
+characters (M), where 1 M = 10^6 characters. For more information, see the [Pricing FAQ](https://developers.google.com/translate/v2/faq#pricing).
 
 For more information about Google Translate API visit https://developers.google.com/translate/
 
