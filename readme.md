@@ -26,6 +26,8 @@ See full Getting Started guide: https://developers.google.com/translate/v2/getti
 * Install composer `curl -s http://getcomposer.org/installer | php` then run `composer install` for install all dependencies. For more information about Composer visit: https://getcomposer.org
 * Install PHP Curl extension (php5-curl)
 
+If you had "command not found: potrans" return, just run the command like this: `php bin/potrans` and will run without problems.
+
 ## Example
 
 Follow example will translate whole content of `members-cs_CZ.po` from English (default) to Czech language (default)
