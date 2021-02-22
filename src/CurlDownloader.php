@@ -2,7 +2,9 @@
 /**
  * @author Roman Ožana <ozana@omdesign.cz>
  */
+
 namespace om {
+
 	trait CurlDownloader {
 
 		/** @var int */
@@ -20,7 +22,7 @@ namespace om {
 			CURLOPT_TIMEOUT => 15,
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_USERAGENT => 'Simple PHP Downloader'
+			CURLOPT_USERAGENT => 'Simple PHP Downloader',
 		];
 
 		/**
@@ -71,7 +73,7 @@ namespace om {
 					CURLOPT_HEADER => false,
 					CURLOPT_RETURNTRANSFER => true,
 				] + ($method === 'POST' ? [
-					CURLOPT_POST => TRUE,
+					CURLOPT_POST => true,
 					CURLOPT_POSTFIELDS => http_build_query($params),
 					CURLOPT_URL => $url,
 				] : [
@@ -105,6 +107,7 @@ namespace om {
 }
 
 namespace {
+
 	class DownloadException extends \Exception {
 
 		/** @var string */
