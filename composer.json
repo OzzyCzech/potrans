@@ -18,7 +18,7 @@
 		}
 	],
 	"bin": [
-		"src/potrans"
+		"bin/potrans"
 	],
 	"require": {
 		"php": ">=7.4",
