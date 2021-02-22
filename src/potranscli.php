@@ -19,7 +19,11 @@ use Sepia\PoParser\Parser;
 use Sepia\PoParser\PoCompiler;
 use Sepia\PoParser\SourceHandler\FileSystem;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+	require_once __DIR__ . '/../vendor/autoload.php';
+} elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
+	require_once __DIR__ . '/../../../autoload.php';
+}
 
 Colors::enable();
 
@@ -33,7 +37,6 @@ $arguments->addOption(['output', 'o'], ['description' => 'Path to output PO file
 $arguments->addOption(['wait', 'w'], ['default' => 0, 'description' => 'Wait between requests in microsecond']);
 $arguments->addOption(['from', 'f'], ['default' => 'en', 'description' => 'Source language (default: en)']);
 $arguments->addOption(['to', 't'], ['default' => 'cs', 'description' => 'Target language (default: cs)']);
-
 
 // flags
 $arguments->addFlag(['verbose', 'v'], 'Turn on verbose output');
