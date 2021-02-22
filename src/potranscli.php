@@ -2,111 +2,137 @@
 
 namespace potrans;
 
-/**
- * @author Roman Ozana <ozana@omdesign.cz>
- */
+if (php_sapi_name() != 'cli') {
+	die('Must run from command line');
+}
+
+error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', 1);
+ini_set('log_errors', 0);
+ini_set('html_errors', 0);
 
 use cli\Arguments;
 use cli\Colors;
 use cli\progress\Bar;
-use Sepia\PoParser;
+use Sepia\PoParser\Catalog\Entry;
+use Sepia\PoParser\Parser;
+use Sepia\PoParser\PoCompiler;
+use Sepia\PoParser\SourceHandler\FileSystem;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 Colors::enable();
 
+$strict = in_array('--strict', $_SERVER['argv']);
 $arguments = new Arguments(compact('strict'));
 
+// options
 $arguments->addOption(['apikey', 'k'], ['description' => 'Google Translate API Key']);
 $arguments->addOption(['input', 'i'], ['description' => 'Path to input PO file']);
 $arguments->addOption(['output', 'o'], ['description' => 'Path to output PO file (default: ./tmp/*.po)']);
+$arguments->addOption(['wait', 'w'], ['default' => 0, 'description' => 'Wait between requests in microsecond']);
 $arguments->addOption(['from', 'f'], ['default' => 'en', 'description' => 'Source language (default: en)']);
 $arguments->addOption(['to', 't'], ['default' => 'cs', 'description' => 'Target language (default: cs)']);
 
+
+// flags
 $arguments->addFlag(['verbose', 'v'], 'Turn on verbose output');
 $arguments->addFlag(['help', 'h'], 'Show help');
 $arguments->parse();
 
-$apikey = $arguments['apikey'];
-$input = $arguments['input'];
-$output = $arguments['output'] ? $arguments['output'] : __DIR__ . '/../tmp/' . basename($input);
-$from = $arguments['from'] ? $arguments['from'] : 'en';
-$to = $arguments['to'] ? $arguments['to'] : 'cs';
-$verbose = (bool)$arguments['verbose'];
+$apikey = $arguments['apikey'] ?? null;
+$input = $arguments['input'] ?? null;
+$output = $arguments['output'] ?? __DIR__ . '/../tmp/' . basename($input);
+$from = $arguments['from'] ?? 'en';
+$to = $arguments['to'] ?? 'cs';
+$wait = $arguments['w'] ?? 0;
+$verbose = $arguments['verbose'] ?? false;
 
 if ($arguments['help'] || !$apikey || !$input) {
 	echo str_repeat('-', 80) . PHP_EOL;
 	echo 'PO translator parametters ' . PHP_EOL;
 	echo str_repeat('-', 80) . PHP_EOL;
-	echo $arguments->getHelpScreen();
+	# waiting for
+	//echo $arguments->getHelpScreen();
 	echo PHP_EOL . PHP_EOL;
 	echo 'Example' . PHP_EOL;
-	echo '  potrans -k 123456789 -i members-cs_CZ.po -v';
+	echo '  potrans --apikey 123456789 --input tests/example-cs_CZ.po --verbose';
 	exit(PHP_EOL . PHP_EOL);
 }
 
 if (!file_exists($input)) {
-	die(Colors::colorize('%rFile "' . print_r($input) . '" not exists %n' . PHP_EOL));
+	die(Colors::colorize(sprintf("%%rFile \"%s\" does not exists %%n%s", var_export($input, true), PHP_EOL)));
 }
 
 if (!is_dir(dirname($output))) {
 	mkdir(dirname($output), 0755, true);
 	// Failed to create dir
 	if (!is_dir(dirname($output))) {
-		die(Colors::colorize('%rDirectory "' . dirname($output) . '" not exists %n' . PHP_EOL));
+		die(Colors::colorize(sprintf("%%rDirectory \"%s\" does not exists %%n%s", dirname($output), PHP_EOL)));
 	}
 }
 
 if (!is_dir($tmp = __DIR__ . '/../tmp')) mkdir($tmp, 0777);
-Translator::$cacheDir = $tmp;
 
 try {
 	// translator
-	$translator = new Translator($arguments['apikey']);
+	$translator = new Translator($apikey);
+	$translator->setCacheDir($tmp);
 	$translator->httpOptions[CURLOPT_FAILONERROR] = false;
 	$translator->httpOptions[CURLOPT_HTTP200ALIASES] = [400];
 
-	// parser
-	$po = new PoParser();
-	$entries = $po->read($input);
+	// input parsers
+	$poInput = new Parser(new FileSystem($input));
+	$inputCatalog = $poInput->parse();
 
-	$previousEntries = null;
-	if (file_exists($output)) {
-		$previousEntries = $po->read($output);
-	}
+	// output parsers
+	$outputHandler = $output ? new FileSystem($output) : null;
+	$poOutput = file_exists($output) ? new Parser($outputHandler) : false;
+	$outputCatalog = $poOutput ? $poOutput->parse() : false;
 
-	echo Colors::colorize('Translating : %b' . count($entries) . '%n entries from ' . $from . ' to ' . $to . PHP_EOL);
-	$progress = new Bar('Translate status ', count($entries));
+	// headline
+	printf("%s\n Translating %s entitites from %s to %s\n%s\n", str_repeat('-', 80), count($inputCatalog->getEntries()), $from, $to, str_repeat('-', 80));
+	$progress = new Bar('Translate status ', count($inputCatalog->getEntries()));
 
-	foreach ($entries as $entry => $data) {
-		$translate = "";
-		$skipped = "";
-		if (isset($previousEntries) && !empty($previousEntries[$entry]['msgstr'][0])) {
-			$skipped = "(skipped)";
-			$translate = $previousEntries[$entry]['msgstr'][0];
+	// translate Entries
+	/** @var Entry $entry */
+	foreach ($inputCatalog->getEntries() as $entry) {
+
+		if ($outputCatalog && $translated = $outputCatalog->getEntry($entry->getMsgId())) {
+			$entry->setMsgStr($translated->getMsgStr()); // already in ouput file
+			if ($verbose) printf("> Skipped %s\n", $entry->getMsgId());
 		} else {
-			$translate = $translator->translate($entry, $from, $to);
+			if ($wait) usleep($wait); // sleep between requests
+
+			$translate = $translator->translate($entry->getMsgId(), $from, $to);
+			$entry->setMsgStr($translate);
+			if ($verbose) printf("> Translate: %s\n", $entry->getMsgId());
 		}
 
-		$po->update_entry($entry, $translate);
-
-		if ($verbose) {
-			echo $verbose ? " $entry => $translate $skipped" . PHP_EOL : null;
-		} else {
+		if (!$verbose) {
 			$progress->tick();
 		}
 	}
 
 	if (!$verbose) $progress->finish();
 
-	echo 'Save output to: ' . $output . PHP_EOL;
-	$po->write($output);
+	// save output
 
-} catch (\DownloadException $e) {
+	$compiler = new PoCompiler();
+	if ($output) {
+		printf("Save output to: %s\n", $output);
+		$outputHandler->save($compiler->compile($inputCatalog));
+	} else {
+		echo $compiler->compile($inputCatalog);
+	}
+
+} catch (DownloadException $e) {
 	$response = @json_decode($e->getResponse());
 	if (isset($response->error->errors[0]->reason) && $response->error->errors[0]->reason === 'keyInvalid') {
 		die(Colors::colorize('%rInvalid Google Translate API key%n' . PHP_EOL));
 	} else {
 		die(Colors::colorize('%rError "' . $e->getMessage() . '"%n' . PHP_EOL));
 	}
+} catch (\Exception $e) {
+	die(Colors::colorize('%rInput parsing exception%n: ' . strval($e) . PHP_EOL));
 }

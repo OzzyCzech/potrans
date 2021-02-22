@@ -2,33 +2,27 @@
 
 namespace potrans;
 
-use om\CurlDownloader;
-
 class Translator {
 
 	use CurlDownloader;
 
 	const API_URL = 'https://www.googleapis.com/language/translate/v2';
 
-	/** @var null */
-	protected $apiKey;
+	protected string $apiKey;
 
-	/**
-	 * @param null $apiKey
-	 */
-	public function __construct($apiKey = null) {
+	public function __construct(string $apiKey) {
 		$this->apiKey = $apiKey;
 	}
 
 	/**
-	 * Translate string using Google translator API
-	 *
-	 * @param $text
+	 * Translate string with Google API
+	 * @param string $text
 	 * @param string $source
 	 * @param string $target
-	 * @return mixed|null
+	 * @return mixed
+	 * @throws DownloadException
 	 */
-	public function translate($text, $source = 'en', $target = 'cs') {
+	public function translate(string $text, string $source = 'en', string $target = 'cs') {
 		$result = $this->cachedRequest(
 			self::API_URL,
 			[
