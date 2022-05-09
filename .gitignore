@@ -1,3 +1,5 @@
 tmp
 vendor
+tests/*.mo
 composer.lock
+credentials.json
