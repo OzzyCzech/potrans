@@ -1,4 +1,4 @@
-# Potrans
+# PO file translator
 
 Potrans it's PHP command line tool for automatic translation of [Gettext](https://www.gnu.org/software/gettext/) PO file with
 [Google Translator](https://cloud.google.com/translate) or [DeepL Translator](https://www.deepl.com/).
