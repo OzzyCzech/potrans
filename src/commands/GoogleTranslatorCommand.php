@@ -1,6 +1,6 @@
 <?php
 
-namespace potrans\translators;
+namespace potrans\commands;
 
 use Gettext\Generator\MoGenerator;
 use Gettext\Generator\PoGenerator;
@@ -9,9 +9,9 @@ use Gettext\Translation;
 use Gettext\Translations;
 use Google\ApiCore\ValidationException;
 use Google\Cloud\Translate\V3\TranslationServiceClient;
-use potrans\translators\DeepLTranslator;
-use potrans\translators\GoogleTranslator;
-use potrans\translators\ITranslator;
+use potrans\commands\DeepLTranslator;
+use potrans\commands\GoogleTranslator;
+use potrans\commands\ITranslator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Console\Command\Command;

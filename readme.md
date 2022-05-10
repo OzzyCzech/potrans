@@ -76,11 +76,55 @@ You can watch it here:
 [<img src="https://img.youtube.com/vi/SCyP1AN2-EE/maxresdefault.jpg" width="50%" style="margin:auto">](https://www.youtube.com/watch?v=SCyP1AN2-EE)
 
 ## DeepL Translator
+
+```shell
+bin/potrans deepl --help
+```
+
+```text
+Description:
+  Translate PO file with DeepL Translator API
+
+Usage:
+  deepl [options] [--] <input> [<output>]
+
+Arguments:
+  input                   Input PO file path
+  output                  Output PO, MO files directory [default: "~/Downloads"]
+
+Options:
+      --from=FROM         Source language (default: en) [default: "en"]
+      --to=TO             Target language (default: cs) [default: "cs"]
+      --all               Re-translate including translated sentences
+      --wait=WAIT         Wait between translations in milliseconds [default: false]
+      --apikey=APIKEY     Deepl API Key
+      --cache|--no-cache  Load from cache or not
+  -h, --help              Display help for the given command. When no command is given display help for the list command
+  -q, --quiet             Do not output any message
+  -V, --version           Display this application version
+      --ansi|--no-ansi    Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction    Do not ask any interactive question
+  -v|vv|vvv, --verbose    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+```
+
+### Example commands
+
+```shell
+bin/potrans deepl tests/example-cs_CZ.po ~/Downloads --apikey=123456
+```
+
 ### DeepL Translator API pricing
 
-DeepL translator [API pricing](https://www.deepl.com/pro-api) is based on monthly subscription. There is max. 500,000 characters/month for free.
+DeepL translator [API pricing](https://www.deepl.com/pro-api) is based on monthly subscription.
+There is max. 500,000 characters/month for free.
 
 For more information visit https://www.deepl.com/pro-api
+
+### Getting Api Key
+
+1. Register [free Account](https://www.deepl.com/pro)
+2. Visit [Account summary](https://www.deepl.com/pro-account/summary)
+3. Search for Authentication Key for DeepL API
 
 ## Install
 
@@ -88,7 +132,7 @@ For more information visit https://www.deepl.com/pro-api
 composer require --dev om/potrans
 ```
 
-## Development
+## Potrans development
 
 1. Install composer `curl -s http://getcomposer.org/installer | php`
 2. Run `composer install` for install all dependencies
