@@ -63,17 +63,17 @@ See supported languages: https://developers.google.com/translate/v2/using_rest#l
 
 ### Getting Google Translation Credentials
 
-1. Go to the [Google Cloud Console](https://console.developers.google.com/).
-2. Create a **new Project** or open existing one
+1. Open [Google Cloud Console](https://console.cloud.google.com/) website
+2. Create a new **Project** (or select existing one)
 3. Search for [translate API](https://cloud.google.com/translate/docs/apis) and enable it then
 4. Go to [IAM & Admin](https://console.cloud.google.com/iam-admin/iam) > *Service Accounts* and click to **+ Create service account**
-   * Chose *Service account name* and *Service account ID* and click to Create and continue
-   * Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
-5. Create new Keys and download credentials JSON file
+  * Chose *Service account name* and *Service account ID* and click to **Create and continue**
+  * Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
+5. Create new Keys and **download credentials JSON file**
 
-More information here: https://www.youtube.com/watch?v=A3knNbGfXh4
+<video src=https://www.youtube.com/watch?v=SCyP1AN2-EE width=180>
 
-* [Translaton AI](https://cloud.google.com/translate)
+* [Translaton API](https://cloud.google.com/translate)
 * [Quick Starts](https://cloud.google.com/translate/docs/quickstarts)
 
 ### DeepL Translator API pricing
@@ -81,6 +81,7 @@ More information here: https://www.youtube.com/watch?v=A3knNbGfXh4
 DeepL translator [API pricing](https://www.deepl.com/pro-api) is based on monthly subscription. There is max. 500,000 characters/month for free.
 
 For more information visit https://www.deepl.com/pro-api
+
 
 ## Install
 
