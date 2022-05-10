@@ -67,8 +67,8 @@ See supported languages: https://developers.google.com/translate/v2/using_rest#l
 2. Create a **new Project** or open existing one
 3. Search for [translate API](https://cloud.google.com/translate/docs/apis) and enable it then
 4. Go to [IAM & Admin](https://console.cloud.google.com/iam-admin/iam) > *Service Accounts* and click to **+ Create service account**
-  * Chose *Service account name* and *Service account ID* and click to Create and continue
-  * Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
+   * Chose *Service account name* and *Service account ID* and click to Create and continue
+   * Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
 5. Create new Keys and download credentials JSON file
 
 More information here: https://www.youtube.com/watch?v=A3knNbGfXh4
