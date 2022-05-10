@@ -71,7 +71,7 @@ See supported languages: https://developers.google.com/translate/v2/using_rest#l
   * Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
 5. Create new Keys and **download credentials JSON file**
 
-<video src=https://www.youtube.com/watch?v=SCyP1AN2-EE width=180>
+[<img src="https://img.youtube.com/vi/SCyP1AN2-EE/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=SCyP1AN2-EE)
 
 * [Translaton API](https://cloud.google.com/translate)
 * [Quick Starts](https://cloud.google.com/translate/docs/quickstarts)
