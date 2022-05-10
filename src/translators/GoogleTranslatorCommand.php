@@ -36,7 +36,7 @@ class GoogleTranslatorCommand extends Command {
 			->addOption('all', null, InputOption::VALUE_NONE, 'Re-translate including translated sentences')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('credentials', null, InputOption::VALUE_REQUIRED, 'Path to Google Credentials file', './credentials.json')
-			->addOption('project', null, InputOption::VALUE_REQUIRED, 'Google Cloud Project ID')
+			->addOption('project', null, InputOption::VALUE_REQUIRED, 'Google Cloud Project ID (default: project_id from credentials.json)')
 			->addOption('location', null, InputOption::VALUE_REQUIRED, 'Google Cloud Location', 'global')
 			->addOption('cache', null, InputOption::VALUE_NEGATABLE, 'Load from cache or not', true);
 	}
@@ -66,7 +66,6 @@ class GoogleTranslatorCommand extends Command {
 			$from = $input->getOption('from');
 			$to = $input->getOption('to');
 			$inputFile = $input->getArgument('input');
-			$location = $input->getOption('location');
 			$wait = $input->getOption('wait');
 
 			// load translations
@@ -79,10 +78,10 @@ class GoogleTranslatorCommand extends Command {
 			}
 			$translator = new TranslationServiceClient(['credentials' => $credentials]);
 
-			// project
+			// get project from credentials
 			$project = $input->getOption('project');
 			if (!$project) {
-				throw new InvalidOptionException('Project ID is required');
+				$project = json_decode(file_get_contents($credentials))->project_id;
 			}
 
 			// output directory
@@ -121,7 +120,7 @@ class GoogleTranslatorCommand extends Command {
 						$response = $translator->translateText(
 							[$sentence->getOriginal()],
 							$to,
-							TranslationServiceClient::locationName($project, $location),
+							TranslationServiceClient::locationName($project, $input->getOption('location')),
 							['sourceLanguageCode' => $from]
 						);
 
