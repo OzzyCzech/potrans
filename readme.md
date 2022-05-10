@@ -57,9 +57,9 @@ Google Translate API pricing is based on usage. Translation usage is calculated 
 of characters (M), where 1 M = 10^6 characters. For more information, see the
 [Pricing FAQ](https://cloud.google.com/translate/pricing).
 
-For more information about Google Translate API visit https://developers.google.com/translate/
-
-See supported languages: https://developers.google.com/translate/v2/using_rest#language-params
+* [Translaton API](https://cloud.google.com/translate)
+* [Quick Starts](https://cloud.google.com/translate/docs/quickstarts)
+* [Supported languages](https://developers.google.com/translate/v2/using_rest#language-params)
 
 ### Getting Google Translation Credentials
 
@@ -75,9 +75,7 @@ You can watch it here:
 
 [<img src="https://img.youtube.com/vi/SCyP1AN2-EE/maxresdefault.jpg" width="50%" style="margin:auto">](https://www.youtube.com/watch?v=SCyP1AN2-EE)
 
-* [Translaton API](https://cloud.google.com/translate)
-* [Quick Starts](https://cloud.google.com/translate/docs/quickstarts)
-
+## DeepL Translator
 ### DeepL Translator API pricing
 
 DeepL translator [API pricing](https://www.deepl.com/pro-api) is based on monthly subscription. There is max. 500,000 characters/month for free.
