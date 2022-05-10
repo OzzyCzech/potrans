@@ -67,9 +67,11 @@ See supported languages: https://developers.google.com/translate/v2/using_rest#l
 2. Create a new **Project** (or select existing one)
 3. Search for [translate API](https://cloud.google.com/translate/docs/apis) and enable it then
 4. Go to [IAM & Admin](https://console.cloud.google.com/iam-admin/iam) > *Service Accounts* and click to **+ Create service account**
-  * Chose *Service account name* and *Service account ID* and click to **Create and continue**
-  * Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
-5. Create new Keys and **download credentials JSON file**
+5. Chose *Service account name* and *Service account ID* and click to **Create and continue**
+6. Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
+7. Create new Keys and **download credentials JSON file**
+
+You can watch it here:
 
 [<img src="https://img.youtube.com/vi/SCyP1AN2-EE/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=SCyP1AN2-EE)
 
@@ -81,7 +83,6 @@ See supported languages: https://developers.google.com/translate/v2/using_rest#l
 DeepL translator [API pricing](https://www.deepl.com/pro-api) is based on monthly subscription. There is max. 500,000 characters/month for free.
 
 For more information visit https://www.deepl.com/pro-api
-
 
 ## Install
 
