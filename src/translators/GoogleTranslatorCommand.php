@@ -36,7 +36,7 @@ class GoogleTranslatorCommand extends Command {
 			->addOption('all', null, InputOption::VALUE_NONE, 'Re-translate including translated sentences')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('credentials', null, InputOption::VALUE_REQUIRED, 'Path to Google Credentials file', './credentials.json')
-			->addOption('project', null, InputOption::VALUE_REQUIRED, 'Google Cloud Project ID (default: project_id from credentials.json)')
+			->addOption('project', null, InputOption::VALUE_REQUIRED, 'Google Cloud Project ID <comment>[default: project_id from credentials.json]</comment>')
 			->addOption('location', null, InputOption::VALUE_REQUIRED, 'Google Cloud Location', 'global')
 			->addOption('cache', null, InputOption::VALUE_NEGATABLE, 'Load from cache or not', true);
 	}
@@ -187,7 +187,7 @@ class GoogleTranslatorCommand extends Command {
 	}
 
 	public function getDescription(): string {
-		return 'Translate PO file with Google Translator';
+		return 'Translate PO file with Google Translator API';
 	}
 
 }
