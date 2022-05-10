@@ -1,4 +1,4 @@
-tmp
+cache
 vendor
 tests/*.mo
 composer.lock
