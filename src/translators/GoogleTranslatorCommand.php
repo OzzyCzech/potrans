@@ -141,7 +141,7 @@ class GoogleTranslatorCommand extends Command {
 
 		// MO file output
 		$moGenerator = new MoGenerator();
-		$moOutputFile = $outputDir . DIRECTORY_SEPARATOR . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
+		$moOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
 		if ($output->isVeryVerbose()) {
 			$output->writeln('Writing new MO File: ' . $moOutputFile);
 		}
@@ -149,7 +149,7 @@ class GoogleTranslatorCommand extends Command {
 
 		// PO file output
 		$poGenerator = new PoGenerator();
-		$poOutputFile = $outputDir . DIRECTORY_SEPARATOR . pathinfo($inputFile, PATHINFO_FILENAME) . '.po';
+		$poOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.po';
 		if ($output->isVeryVerbose()) {
 			$output->writeln('Writing new PO File: ' . $poOutputFile);
 		}
