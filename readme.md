@@ -73,7 +73,7 @@ See supported languages: https://developers.google.com/translate/v2/using_rest#l
 
 You can watch it here:
 
-[<img src="https://img.youtube.com/vi/SCyP1AN2-EE/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=SCyP1AN2-EE)
+[<img src="https://img.youtube.com/vi/SCyP1AN2-EE/maxresdefault.jpg" width="50%" style="margin:auto">](https://www.youtube.com/watch?v=SCyP1AN2-EE)
 
 * [Translaton API](https://cloud.google.com/translate)
 * [Quick Starts](https://cloud.google.com/translate/docs/quickstarts)
