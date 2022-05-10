@@ -75,9 +75,9 @@ class GoogleTranslatorCommand extends Command {
 		}
 
 		// output directory
-		$outputDir = $input->getArgument('output');
-		if (!$outputDir) {
-			$outputDir = pathinfo($inputFile, PATHINFO_DIRNAME) . '/';
+		$outputDir = realpath($input->getArgument('output')) . DIRECTORY_SEPARATOR;
+		if (!is_dir($outputDir)) {
+			throw new InvalidOptionException('Invalid directory path: ' . $outputDir);
 		}
 
 		// translator
@@ -140,19 +140,20 @@ class GoogleTranslatorCommand extends Command {
 		$output->writeln('Translated sentences count: ' . $translated);
 
 		// MO file output
-		if ($output->isVeryVerbose()) {
-			$output->writeln(['...outputting MO File']);
-		}
 		$moGenerator = new MoGenerator();
-		$moGenerator->generateFile($translations, $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo');
+		$moOutputFile = $outputDir . DIRECTORY_SEPARATOR . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
+		if ($output->isVeryVerbose()) {
+			$output->writeln('Writing new MO File: ' . $moOutputFile);
+		}
+		$moGenerator->generateFile($translations, $moOutputFile);
 
 		// PO file output
-		if ($output->isVeryVerbose()) {
-			$output->writeln(['...outputting PO File']);
-		}
-
 		$poGenerator = new PoGenerator();
-		$poGenerator->generateFile($translations, $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.po');
+		$poOutputFile = $outputDir . DIRECTORY_SEPARATOR . pathinfo($inputFile, PATHINFO_FILENAME) . '.po';
+		if ($output->isVeryVerbose()) {
+			$output->writeln('Writing new PO File: ' . $poOutputFile);
+		}
+		$poGenerator->generateFile($translations, $poOutputFile);
 
 		// done!
 		$output->writeln('DONE!');
