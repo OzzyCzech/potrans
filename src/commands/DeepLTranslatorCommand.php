@@ -106,15 +106,20 @@ class DeepLTranslatorCommand extends Command {
 							'text' => $sentence->getOriginal(),
 						]);
 
-						$response = reset(json_decode(curl_exec($curl))->translations);
-						curl_close($curl);
+						if ($data = curl_exec($curl)) {
+							$jsonResponse = json_decode($data);
+							$text = isset($jsonResponse[0]->translations->text) ?? null;
+							if ($text) {
+								$translation->set($text); // set new translation
+							}
 
-						// set new translation
-						$translation->set($response->text);
-
-						if ($input->getOption('cache')) {
-							$cache->save($translation);
+							// save only successful translations
+							if ($text && $input->getOption('cache')) {
+								$cache->save($translation);
+							}
 						}
+
+						curl_close($curl);
 					}
 
 					$sentence->translate($translation->get());
@@ -166,7 +171,12 @@ class DeepLTranslatorCommand extends Command {
 			$output->writeln('<info>DONE!</info>');
 
 		} catch (\Throwable $error) {
-			$output->writeln('<error>ERROR: ' . $error->getMessage() . '</error>');
+			$output->writeln(
+				[
+					'',
+					sprintf("<error>ERROR: %s on %s at %s</error>", $error->getMessage(), $error->getFile(), $error->getLine()),
+				]
+			);
 			return Command::FAILURE;
 		}
 		return Command::SUCCESS;

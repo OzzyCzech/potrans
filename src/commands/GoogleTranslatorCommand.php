@@ -179,7 +179,12 @@ class GoogleTranslatorCommand extends Command {
 
 			$output->writeln('<info>DONE!</info>');
 		} catch (\Throwable $error) {
-			$output->writeln('<error>ERROR: ' . $error->getMessage() . '</error>');
+			$output->writeln(
+				[
+					'',
+					sprintf("<error>ERROR: %s on %s at %s</error>", $error->getMessage(), $error->getFile(), $error->getLine()),
+				]
+			);
 			return Command::FAILURE;
 		}
 
