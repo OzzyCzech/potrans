@@ -108,7 +108,7 @@ class DeepLTranslatorCommand extends Command {
 
 						if ($data = curl_exec($curl)) {
 							$jsonResponse = json_decode($data);
-							$text = isset($jsonResponse[0]->translations->text) ?? null;
+							$text = isset($jsonResponse->translations[0]->text) ?? null;
 							if ($text) {
 								$translation->set($text); // set new translation
 							}
