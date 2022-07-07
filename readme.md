@@ -144,7 +144,7 @@ If you had `"command not found: potrans"` return, just run the command like this
 
 ## Troubleshooting
 
-### cURL error: SSL certificate issue (Google Translate only)
+#### cURL error: SSL certificate issue (Google Translate only)
 
 You may encounter a problem caused by cURL like follow:
 
