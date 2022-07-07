@@ -163,7 +163,7 @@ curl.cainfo="/usr/local/etc/cacert.pem"
 openssl.cafile="/usr/local/etc/cacert.pem"
 ```
 
-You can verify it with `phpinfo()` or `php --info`. Read more detailed instruction [here](https://stackoverflow.com/a/32095378/355316).
+You can verify it with `phpinfo()` or `php --info`. Read more detailed [instruction here](https://stackoverflow.com/a/32095378/355316).
 
 ## Links
 
