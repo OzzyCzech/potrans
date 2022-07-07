@@ -73,7 +73,6 @@ class DeepLTranslatorCommand extends Command {
 			);
 
 			$progress = new ProgressBar($output, count($translations));
-			$client = new Client(['base_uri' => 'https://api-free.deepl.com/v2/']);
 
 			$translated = 0; // counter
 			/** @var Translation $sentence */
@@ -108,7 +107,7 @@ class DeepLTranslatorCommand extends Command {
 
 						if ($data = curl_exec($curl)) {
 							$jsonResponse = json_decode($data);
-							$text = isset($jsonResponse->translations[0]->text) ?? null;
+							$text = $jsonResponse->translations[0]->text ?? null;
 							if ($text) {
 								$translation->set($text); // set new translation
 							}
