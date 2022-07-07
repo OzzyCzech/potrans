@@ -142,9 +142,30 @@ For more information about Composer visit: [https://getcomposer.org](https://get
 
 If you had `"command not found: potrans"` return, just run the command like this: `php bin/potrans` and will run without problems.
 
+## Troubleshooting
+
+### cURL error: SSL certificate issue (Google Translate only)
+
+You may encounter a problem caused by cURL like follow:
+
+```text
+cURL error 60: SSL certificate problem: unable to get local issuer certificate (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)
+```
+
+There is missing issuer certificate `cacert.pem` file and curl won't verify SSL requests:
+
+1. Download [http://curl.haxx.se/ca/cacert.pem](http://curl.haxx.se/ca/cacert.pem)
+2. Save is somewhere e.g. `/usr/local/etc/cacert.pem`
+3. Update your `php.ini` with following:
+
+```ini
+curl.cainfo="/usr/local/etc/cacert.pem"
+openssl.cafile="/usr/local/etc/cacert.pem"
+```
+
+You can verify it with `phpinfo()` or `php --info`. Read more detailed instruction [here](https://stackoverflow.com/a/32095378/355316).
+
 ## Links
 
 * [GNU gettext utilities](https://www.gnu.org/software/gettext/manual/html_node/)
 * [PHP Gettext](https://github.com/php-gettext/Gettext)
-
-
