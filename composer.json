@@ -1,15 +1,8 @@
 {
 	"name": "om/potrans",
 	"description": "Command line tool for translate Gettext with Google Translator API",
-	"keywords": [
-		"potrans",
-		"gettext",
-		"google",
-		"translator"
-	],
-	"license": [
-		"BSD-3-Clause"
-	],
+	"keywords": ["potrans", "gettext", "google", "translator"],
+	"license": ["BSD-3-Clause"],
 	"authors": [
 		{
 			"name": "Roman Ožana",
@@ -17,14 +10,14 @@
 			"homepage": "https://ozana.cz"
 		}
 	],
-	"bin": [
-		"bin/potrans"
-	],
+	"bin": ["bin/potrans"],
 	"require": {
 		"symfony/console": "^6.0",
 		"gettext/gettext": "^5.6",
 		"google/cloud-translate": "^1.12",
-		"symfony/cache": "^6.0"
+		"symfony/cache": "^6.0",
+		"ext-curl": "*",
+		"ext-json": "*"
 	},
 	"require-dev": {
 		"nette/tester": "^2.3"

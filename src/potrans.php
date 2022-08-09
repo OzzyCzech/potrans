@@ -4,7 +4,6 @@ namespace potrans;
 
 use potrans\commands\DeepLTranslatorCommand;
 use potrans\commands\GoogleTranslatorCommand;
-use potrans\commands\BaseInputDefinition;
 use Symfony\Component\Console\Application;
 
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {

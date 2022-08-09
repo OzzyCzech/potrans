@@ -6,10 +6,6 @@ use Gettext\Generator\MoGenerator;
 use Gettext\Generator\PoGenerator;
 use Gettext\Loader\PoLoader;
 use Gettext\Translation;
-use GuzzleHttp\Client;
-use potrans\commands\DeepLTranslator;
-use potrans\commands\GoogleTranslator;
-use potrans\commands\ITranslator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -19,7 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpClient\HttpClient;
+use Throwable;
 
 class DeepLTranslatorCommand extends Command {
 
@@ -82,7 +78,8 @@ class DeepLTranslatorCommand extends Command {
 					// translated counter
 					$translated++;
 
-					$translation = $cache->getItem(md5($sentence->getOriginal()));
+					$key = md5($sentence->getOriginal() . $from . $to);
+					$translation = $cache->getItem($key);
 					if (!$translation->isHit() || !$input->getOption('cache')) {
 
 						$curl = curl_init();
@@ -169,7 +166,7 @@ class DeepLTranslatorCommand extends Command {
 			// done!
 			$output->writeln('<info>DONE!</info>');
 
-		} catch (\Throwable $error) {
+		} catch (Throwable $error) {
 			$output->writeln(
 				[
 					'',

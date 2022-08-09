@@ -7,24 +7,17 @@ use Gettext\Generator\PoGenerator;
 use Gettext\Loader\PoLoader;
 use Gettext\Translation;
 use Gettext\Translations;
-use Google\ApiCore\ValidationException;
 use Google\Cloud\Translate\V3\TranslationServiceClient;
-use potrans\commands\DeepLTranslator;
-use potrans\commands\GoogleTranslator;
-use potrans\commands\ITranslator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
+use Throwable;
 
 class GoogleTranslatorCommand extends Command {
 
@@ -113,7 +106,8 @@ class GoogleTranslatorCommand extends Command {
 					// translated counter
 					$translated++;
 
-					$translation = $cache->getItem(md5($sentence->getOriginal()));
+					$key = md5($sentence->getOriginal() . $from . $to);
+					$translation = $cache->getItem($key);
 
 					if (!$translation->isHit() || !$input->getOption('cache')) {
 
@@ -178,7 +172,7 @@ class GoogleTranslatorCommand extends Command {
 			$poGenerator->generateFile($translations, $poOutputFile);
 
 			$output->writeln('<info>DONE!</info>');
-		} catch (\Throwable $error) {
+		} catch (Throwable $error) {
 			$output->writeln(
 				[
 					'',

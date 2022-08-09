@@ -48,7 +48,7 @@ bin/potrans google tests/example-cs_CZ.po ~/Downloads --credentials=your-credent
 You can also change source and target language with `--form` and `--to` parametters:
 
 ```bash
-bin/potrans google tests/example-cs_CZ.po ~/Downloads --credentials=your-credentials-file.json --from=ru --to=en
+bin/potrans google tests/example-cs_CZ.po ~/Downloads --credentials=your-credentials-file.json --from=en --to=de
 ```
 
 ### Google Translate API Pricing
