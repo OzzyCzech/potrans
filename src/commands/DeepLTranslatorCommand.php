@@ -2,6 +2,7 @@
 
 namespace potrans\commands;
 
+use DeepL\Translator;
 use Gettext\Generator\MoGenerator;
 use Gettext\Generator\PoGenerator;
 use Gettext\Loader\PoLoader;
@@ -55,6 +56,8 @@ class DeepLTranslatorCommand extends Command {
 			$to = $input->getOption('to');
 			$apikey = $input->getOption('apikey');
 
+			$translator = new Translator($apikey);
+
 			// translator
 			$output->writeln(
 				[
@@ -80,42 +83,23 @@ class DeepLTranslatorCommand extends Command {
 
 					$key = md5($sentence->getOriginal() . $from . $to);
 					$translation = $cache->getItem($key);
+
 					if (!$translation->isHit() || !$input->getOption('cache')) {
 
-						$curl = curl_init();
+						// TODO add Text translation options
+						// @see https://github.com/DeepLcom/deepl-php#text-translation-options
+						$response = $translator->translateText(
+							$sentence->getOriginal(),
+							$from,
+							$to,
+						);
 
-						curl_setopt($curl, CURLOPT_URL, 'https://api-free.deepl.com/v2/translate');
-						curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-						curl_setopt($curl, CURLOPT_FAILONERROR, false);
-						curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-						curl_setopt($curl, CURLOPT_HEADER, false);
-						curl_setopt($curl, CURLOPT_TIMEOUT, 15);
-						curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-						curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-						curl_setopt($curl, CURLOPT_USERAGENT, 'Simple PHP Downloader');
+						$translation->set($response->text); // set new translation
 
-						curl_setopt($curl, CURLOPT_POST, true);
-						curl_setopt($curl, CURLOPT_POSTFIELDS, [
-							'auth_key' => $apikey,
-							'source_lang' => $from,
-							'target_lang' => $to,
-							'text' => $sentence->getOriginal(),
-						]);
-
-						if ($data = curl_exec($curl)) {
-							$jsonResponse = json_decode($data);
-							$text = $jsonResponse->translations[0]->text ?? null;
-							if ($text) {
-								$translation->set($text); // set new translation
-							}
-
-							// save only successful translations
-							if ($text && $input->getOption('cache')) {
-								$cache->save($translation);
-							}
+						// save only successful translations
+						if ($response->text && $input->getOption('cache')) {
+							$cache->save($translation);
 						}
-
-						curl_close($curl);
 					}
 
 					$sentence->translate($translation->get());

@@ -16,11 +16,10 @@
 		"gettext/gettext": "^5.6",
 		"google/cloud-translate": "^1.12",
 		"symfony/cache": "^6.0",
-		"ext-curl": "*",
-		"ext-json": "*"
+		"deeplcom/deepl-php": "^1.2"
 	},
 	"require-dev": {
-		"nette/tester": "^2.3"
+		"nette/tester": "^2.4"
 	},
 	"autoload": {
 		"psr-4": {

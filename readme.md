@@ -128,7 +128,7 @@ For more information visit https://www.deepl.com/pro-api
 
 ## Install
 
-```
+```shell
 composer require --dev om/potrans
 ```
 
