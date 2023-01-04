@@ -3,11 +3,10 @@
 namespace potrans\commands;
 
 use DeepL\Translator;
-use Gettext\Generator\MoGenerator;
-use Gettext\Generator\PoGenerator;
-use Gettext\Loader\PoLoader;
-use Gettext\Translation;
+use potrans\PoTranslator;
+use potrans\translator\DeepLTranslator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -25,38 +24,46 @@ class DeepLTranslatorCommand extends Command {
 			->addArgument('output', InputArgument::OPTIONAL, 'Output PO, MO files directory', '~/Downloads')
 			->addOption('from', null, InputOption::VALUE_REQUIRED, 'Source language (default: en)', 'en')
 			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: cs)', 'cs')
-			->addOption('all', null, InputOption::VALUE_NONE, 'Re-translate including translated sentences')
+			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('apikey', null, InputOption::VALUE_REQUIRED, 'Deepl API Key')
 			->addOption('cache', null, InputOption::VALUE_NEGATABLE, 'Load from cache or not', true);
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		// input PO file loading
-		$wait = $input->getOption('wait');
-		$cache = new FilesystemAdapter('deepl', 3600, 'cache');
-
 		try {
 
+			// Input PO file
 			$inputFile = $input->getArgument('input');
-			if (!is_file($inputFile)) {
+			if (!file_exists($inputFile)) {
 				throw new RuntimeException(sprintf('Input file "%s" not found', $inputFile));
 			}
 
-			$poLoader = new PoLoader();
-			$translations = $poLoader->loadFile($inputFile);
-
-			// output directory
+			// Output directory
 			$outputDir = realpath($input->getArgument('output')) . DIRECTORY_SEPARATOR;
 			if (!is_dir($outputDir)) {
 				throw new InvalidOptionException('Invalid directory path: ' . $outputDir);
 			}
 
-			$from = $input->getOption('from');
-			$to = $input->getOption('to');
-			$apikey = $input->getOption('apikey');
+			// Crete new DeepL translator
+			$apikey = (string) $input->getOption('apikey');
+			$translator = new DeepLTranslator(
+				new Translator($apikey),
+			);
 
-			$translator = new Translator($apikey);
+			// Setup caching
+			$cache = $input->getOption('cache') ?
+				new FilesystemAdapter('deepl', 3600, 'cache') :
+				new NullAdapter();
+
+			// Read params
+			$force = (bool) $input->getOption('force');
+			$to = (string) $input->getOption('to');
+			$from = (string) $input->getOption('from');
+			$wait = (int) $input->getOption('wait');
+
+			$potrans = new PoTranslator($translator, $cache);
+			$translations = $potrans->loadFile($inputFile);
 
 			// translator
 			$output->writeln(
@@ -74,52 +81,24 @@ class DeepLTranslatorCommand extends Command {
 			$progress = new ProgressBar($output, count($translations));
 
 			$translated = 0; // counter
-			/** @var Translation $sentence */
-			foreach ($translations as $sentence) {
-
-				if (!$sentence->getTranslation() || $input->getOption('all')) {
-					// translated counter
-					$translated++;
-
-					$key = md5($sentence->getOriginal() . $from . $to);
-					$translation = $cache->getItem($key);
-
-					if (!$translation->isHit() || !$input->getOption('cache')) {
-
-						// TODO add Text translation options
-						// @see https://github.com/DeepLcom/deepl-php#text-translation-options
-						$response = $translator->translateText(
-							$sentence->getOriginal(),
-							$from,
-							$to,
-						);
-
-						$translation->set($response->text); // set new translation
-
-						// save only successful translations
-						if ($response->text && $input->getOption('cache')) {
-							$cache->save($translation);
-						}
-					}
-
-					$sentence->translate($translation->get());
-
-					// verbose mode show everything
-					if ($output->isVeryVerbose()) {
-						$output->writeln(
-							[
-								'-------------------------------------------------------------------------',
-								' > ' . $sentence->getOriginal(),
-								' > ' . $sentence->getTranslation(),
-							]
-						);
-					}
+			foreach ($potrans->translate($from, $to, $force) as $sentence) {
+				// verbose mode show everything
+				if ($output->isVeryVerbose()) {
+					$output->writeln(
+						[
+							'-------------------------------------------------------------------------',
+							' > <info>' . $sentence->getOriginal() . '</info>',
+							' > <comment>' . $sentence->getTranslation() . '</comment>',
+						]
+					);
 				}
 
 				// progress
 				if (!$output->isVeryVerbose()) {
 					$progress->advance();
 				}
+
+				$translated++;
 
 				if ($wait) usleep($wait);
 			}
@@ -132,20 +111,18 @@ class DeepLTranslatorCommand extends Command {
 			$output->writeln('<comment>Translated :</comment> ' . $translated . ' sentences');
 
 			// MO file output
-			$moGenerator = new MoGenerator();
 			$moOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
 			if ($output->isVeryVerbose()) {
 				$output->writeln('<comment>Writing new MO File</comment>: ' . $moOutputFile);
 			}
-			$moGenerator->generateFile($translations, $moOutputFile);
+			$potrans->saveMoFile($moOutputFile);
 
 			// PO file output
-			$poGenerator = new PoGenerator();
 			$poOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.po';
 			if ($output->isVeryVerbose()) {
 				$output->writeln('<comment>Writing new PO File</comment>: ' . $poOutputFile);
 			}
-			$poGenerator->generateFile($translations, $poOutputFile);
+			$potrans->savePoFile($moOutputFile);
 
 			// done!
 			$output->writeln('<info>DONE!</info>');

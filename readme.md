@@ -1,3 +1,7 @@
+![Packagist License](https://img.shields.io/packagist/l/om/potrans?style=for-the-badge)
+![Packagist Version](https://img.shields.io/packagist/v/om/potrans?style=for-the-badge)
+![Packagist Downloads](https://img.shields.io/packagist/dm/om/potrans?style=for-the-badge)
+
 # PO file translator
 
 Potrans it's PHP command line tool for automatic translation of [Gettext](https://www.gnu.org/software/gettext/) PO file with
@@ -23,7 +27,7 @@ Arguments:
 Options:
       --from=FROM                Source language (default: en) [default: "en"]
       --to=TO                    Target language (default: cs) [default: "cs"]
-      --all                      Re-translate including translated sentences
+      --force                    Force re-translate including translated sentences
       --wait=WAIT                Wait between translations in milliseconds [default: false]
       --credentials=CREDENTIALS  Path to Google Credentials file [default: "./credentials.json"]
       --project=PROJECT          Google Cloud Project ID [default: project_id from credentials.json]
@@ -95,7 +99,7 @@ Arguments:
 Options:
       --from=FROM         Source language (default: en) [default: "en"]
       --to=TO             Target language (default: cs) [default: "cs"]
-      --all               Re-translate including translated sentences
+      --force             Force re-translate including translated sentences
       --wait=WAIT         Wait between translations in milliseconds [default: false]
       --apikey=APIKEY     Deepl API Key
       --cache|--no-cache  Load from cache or not
@@ -159,8 +163,8 @@ There is missing issuer certificate `cacert.pem` file and curl won't verify SSL 
 3. Update your `php.ini` with following:
 
 ```ini
-curl.cainfo="/usr/local/etc/cacert.pem"
-openssl.cafile="/usr/local/etc/cacert.pem"
+curl.cainfo = "/usr/local/etc/cacert.pem"
+openssl.cafile = "/usr/local/etc/cacert.pem"
 ```
 
 You can verify it with `phpinfo()` or `php --info`. Read more detailed [instruction here](https://stackoverflow.com/a/32095378/355316).

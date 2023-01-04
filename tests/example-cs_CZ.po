@@ -37,3 +37,7 @@ msgstr ""
 #: /app/modules/views
 msgid "Password"
 msgstr ""
+
+#: /app/modules/views
+msgid "Do not translate $number$ or  $recipient$"
+msgstr ""
