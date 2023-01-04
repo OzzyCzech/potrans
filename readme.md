@@ -1,6 +1,10 @@
+<div align="center">
+
 ![Packagist License](https://img.shields.io/packagist/l/om/potrans?style=for-the-badge)
 ![Packagist Version](https://img.shields.io/packagist/v/om/potrans?style=for-the-badge)
 ![Packagist Downloads](https://img.shields.io/packagist/dm/om/potrans?style=for-the-badge)
+
+</div>
 
 # PO file translator
 
