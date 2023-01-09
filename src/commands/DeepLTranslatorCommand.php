@@ -27,6 +27,7 @@ class DeepLTranslatorCommand extends Command {
 			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('apikey', null, InputOption::VALUE_REQUIRED, 'Deepl API Key')
+			->addOption('translator', null, InputOption::VALUE_OPTIONAL, 'Path to custom translator instance', null)
 			->addOption('cache', null, InputOption::VALUE_NEGATABLE, 'Load from cache or not', true);
 	}
 
@@ -46,10 +47,19 @@ class DeepLTranslatorCommand extends Command {
 			}
 
 			// Crete new DeepL translator
-			$apikey = (string) $input->getOption('apikey');
-			$translator = new DeepLTranslator(
-				new Translator($apikey),
-			);
+			$customTranslatorPath = $input->getOption('translator');
+			if ($customTranslatorPath && file_exists($customTranslatorPath)) {
+				$translator = require_once $customTranslatorPath;
+
+				if (!$translator instanceof \potrans\translator\Translator) {
+					throw new InvalidOptionException('Invalid translator instance: ' . $customTranslatorPath);
+				}
+			} else {
+				$apikey = (string) $input->getOption('apikey');
+				$translator = new DeepLTranslator(
+					new Translator($apikey),
+				);
+			}
 
 			// Setup caching
 			$cache = $input->getOption('cache') ?

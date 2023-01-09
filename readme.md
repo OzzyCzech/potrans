@@ -36,6 +36,7 @@ Options:
       --credentials=CREDENTIALS  Path to Google Credentials file [default: "./credentials.json"]
       --project=PROJECT          Google Cloud Project ID [default: project_id from credentials.json]
       --location=LOCATION        Google Cloud Location [default: "global"]
+      --translator[=TRANSLATOR]  Path to custom translator instance
       --cache|--no-cache         Load from cache or not
   -h, --help                     Display help for the given command. When no command is given display help for the list command
   -q, --quiet                    Do not output any message
@@ -97,22 +98,24 @@ Usage:
   deepl [options] [--] <input> [<output>]
 
 Arguments:
-  input                   Input PO file path
-  output                  Output PO, MO files directory [default: "~/Downloads"]
+  input                          Input PO file path
+  output                         Output PO, MO files directory [default: "~/Downloads"]
 
 Options:
-      --from=FROM         Source language (default: en) [default: "en"]
-      --to=TO             Target language (default: cs) [default: "cs"]
-      --force             Force re-translate including translated sentences
-      --wait=WAIT         Wait between translations in milliseconds [default: false]
-      --apikey=APIKEY     Deepl API Key
-      --cache|--no-cache  Load from cache or not
-  -h, --help              Display help for the given command. When no command is given display help for the list command
-  -q, --quiet             Do not output any message
-  -V, --version           Display this application version
-      --ansi|--no-ansi    Force (or disable --no-ansi) ANSI output
-  -n, --no-interaction    Do not ask any interactive question
-  -v|vv|vvv, --verbose    Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+      --from=FROM                Source language (default: en) [default: "en"]
+      --to=TO                    Target language (default: cs) [default: "cs"]
+      --force                    Force re-translate including translated sentences
+      --wait=WAIT                Wait between translations in milliseconds [default: false]
+      --apikey=APIKEY            Deepl API Key
+      --translator[=TRANSLATOR]  Path to custom translator instance
+      --cache|--no-cache         Load from cache or not
+  -h, --help                     Display help for the given command. When no command is given display help for the list command
+  -q, --quiet                    Do not output any message
+  -V, --version                  Display this application version
+      --ansi|--no-ansi           Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction           Do not ask any interactive question
+  -v|vv|vvv, --verbose           Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
 ```
 
 ### Example commands
@@ -139,6 +142,28 @@ For more information visit https://www.deepl.com/pro-api
 ```shell
 composer require --dev om/potrans
 ```
+
+## Custom translator
+
+If you need to use a custom translator that behaves differently than the original translator.
+You have the option to use the `--translator` parameter like follow:
+
+```shell
+./bin/potrans deepl ./tests/example-cs_CZ.po ~/Downloads --apikey=123456 --translator=src/translator/CustomTranslator.php
+```
+
+PHP file should contain implementation of `Translator` interface and should return new instance:
+
+```php
+<?php
+class CustomTranslator implements \potrans\translator\Translator {
+  // TODO add your code
+}
+
+return new CustomTranslator(); 
+```
+
+You can find an example in the file [DeepLTranslatorEscaped.php](https://github.com/OzzyCzech/potrans/blob/master/src/translator/DeepLTranslatorEscaped.php)
 
 ## Potrans development
 

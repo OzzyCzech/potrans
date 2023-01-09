@@ -29,6 +29,7 @@ class GoogleTranslatorCommand extends Command {
 			->addOption('credentials', null, InputOption::VALUE_REQUIRED, 'Path to Google Credentials file', './credentials.json')
 			->addOption('project', null, InputOption::VALUE_REQUIRED, 'Google Cloud Project ID <comment>[default: project_id from credentials.json]</comment>')
 			->addOption('location', null, InputOption::VALUE_REQUIRED, 'Google Cloud Location', 'global')
+			->addOption('translator', null, InputOption::VALUE_OPTIONAL, 'Path to custom translator instance', null)
 			->addOption('cache', null, InputOption::VALUE_NEGATABLE, 'Load from cache or not', true);
 	}
 
@@ -55,11 +56,20 @@ class GoogleTranslatorCommand extends Command {
 			}
 
 			// Crete new Google translator
-			$translator = new GoogleTranslator(
-				new TranslationServiceClient(['credentials' => $credentials]),
-				$input->getOption('project') ?? json_decode(file_get_contents($credentials))->project_id,
-				$input->getOption('location')
-			);
+			$customTranslatorPath = $input->getOption('translator');
+			if ($customTranslatorPath && file_exists($customTranslatorPath)) {
+				$translator = require_once $customTranslatorPath;
+
+				if (!$translator instanceof \potrans\translator\Translator) {
+					throw new InvalidOptionException('Invalid translator instance: ' . $customTranslatorPath);
+				}
+			} else {
+				$translator = new GoogleTranslator(
+					new TranslationServiceClient(['credentials' => $credentials]),
+					$input->getOption('project') ?? json_decode(file_get_contents($credentials))->project_id,
+					$input->getOption('location')
+				);
+			}
 
 			// Setup caching
 			$cache = $input->getOption('cache') ?
