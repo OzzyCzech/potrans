@@ -143,7 +143,7 @@ class GoogleTranslatorCommand extends Command {
 			if ($output->isVeryVerbose()) {
 				$output->writeln('<comment>Writing new PO File</comment>: ' . $poOutputFile);
 			}
-			$potrans->savePoFile($moOutputFile);
+			$potrans->savePoFile($poOutputFile);
 
 			// done!
 			$output->writeln('<info>DONE!</info>');
