@@ -149,7 +149,9 @@ If you need to use a custom translator that behaves differently than the origina
 You have the option to use the `--translator` parameter like follow:
 
 ```shell
-./bin/potrans deepl ./tests/example-cs_CZ.po ~/Downloads --apikey=123456 --translator=src/translator/CustomTranslator.php
+./bin/potrans deepl ./tests/example-cs_CZ.po ~/Downloads \
+    --translator=path/to/my/CustomTranslator.php \
+    --apikey=123456
 ```
 
 PHP file should contain implementation of `Translator` interface and should return new instance:
@@ -163,7 +165,7 @@ class CustomTranslator implements \potrans\translator\Translator {
 return new CustomTranslator(); 
 ```
 
-You can find an example in the file [DeepLTranslatorEscaped.php](https://github.com/OzzyCzech/potrans/blob/master/src/translator/DeepLTranslatorEscaped.php)
+You can find an example custom translator in the file [DeepLTranslatorEscaped.php](https://github.com/OzzyCzech/potrans/blob/master/src/translator/DeepLTranslatorEscaped.php)
 
 ## Potrans development
 
