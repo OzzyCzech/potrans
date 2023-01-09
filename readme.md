@@ -51,13 +51,17 @@ Options:
 Follow command will translate whole content of `tests/example-cs_CZ.po` from English (default) to Czech language (default):
 
 ```bash
-bin/potrans google tests/example-cs_CZ.po ~/Downloads --credentials=your-credentials-file.json
+bin/potrans google tests/example-cs_CZ.po ~/Downloads \
+  --credentials=your-credentials-file.json
 ```
 
 You can also change source and target language with `--form` and `--to` parametters:
 
 ```bash
-bin/potrans google tests/example-cs_CZ.po ~/Downloads --credentials=your-credentials-file.json --from=en --to=de
+bin/potrans google tests/example-cs_CZ.po ~/Downloads \
+  --credentials=your-credentials-file.json \
+  --from=en \
+  --to=de
 ```
 
 ### Google Translate API Pricing
