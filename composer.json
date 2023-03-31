@@ -2,7 +2,7 @@
 	"name": "om/potrans",
 	"description": "Command line tool for translate Gettext with Google Translator API",
 	"keywords": ["potrans", "gettext", "gettext-library", "google", "translator", "translations", "translation", "translate", "deepl", "i18n"],
-	"license": ["BSD-3-Clause"],
+	"license": ["MIT"],
 	"authors": [
 		{
 			"name": "Roman Ožana",
