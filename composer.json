@@ -1,29 +1,49 @@
 {
-	"name": "om/potrans",
-	"description": "Command line tool for translate Gettext with Google Translator API",
-	"keywords": ["potrans", "gettext", "gettext-library", "google", "translator", "translations", "translation", "translate", "deepl", "i18n"],
-	"license": ["MIT"],
-	"authors": [
-		{
-			"name": "Roman Ožana",
-			"email": "roman@ozana.cz",
-			"homepage": "https://ozana.cz"
-		}
-	],
-	"bin": ["bin/potrans"],
-	"require": {
-		"symfony/console": "^6.0",
-		"gettext/gettext": "^5.6",
-		"google/cloud-translate": "^1.12",
-		"symfony/cache": "^6.0",
-		"deeplcom/deepl-php": "^1.2"
-	},
-	"require-dev": {
-		"nette/tester": "^2.4"
-	},
-	"autoload": {
-		"psr-4": {
-			"potrans\\": "src/"
-		}
-	}
+  "name": "om/potrans",
+  "description": "Command line tool for translate Gettext with Google Translator API",
+  "keywords": [
+    "potrans",
+    "gettext",
+    "gettext-library",
+    "google",
+    "translator",
+    "translations",
+    "translation",
+    "translate",
+    "deepl",
+    "i18n"
+  ],
+  "license": [
+    "MIT"
+  ],
+  "authors": [
+    {
+      "name": "Roman Ožana",
+      "email": "roman@ozana.cz",
+      "homepage": "https://ozana.cz"
+    }
+  ],
+  "bin": [
+    "bin/potrans"
+  ],
+  "require": {
+    "symfony/console": "^6.0",
+    "gettext/gettext": "^5.6",
+    "google/cloud-translate": "^1.12",
+    "symfony/cache": "^6.0",
+    "deeplcom/deepl-php": "^1.2"
+  },
+  "require-dev": {
+    "nette/tester": "^2.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "potrans\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
 }
