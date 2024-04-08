@@ -27,14 +27,14 @@
     "bin/potrans"
   ],
   "require": {
-    "symfony/console": "^6.0",
-    "gettext/gettext": "^5.6",
-    "google/cloud-translate": "^1.12",
-    "symfony/cache": "^6.0",
-    "deeplcom/deepl-php": "^1.2"
+    "symfony/console": "^7.0",
+    "gettext/gettext": "^5.7",
+    "google/cloud-translate": "^1.17",
+    "symfony/cache": "^7.0",
+    "deeplcom/deepl-php": "^1.7"
   },
   "require-dev": {
-    "nette/tester": "^2.4"
+    "nette/tester": "^2.5"
   },
   "autoload": {
     "psr-4": {

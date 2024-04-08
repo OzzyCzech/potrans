@@ -137,9 +137,9 @@ For more information visit https://www.deepl.com/pro-api
 
 ### Getting Api Key
 
-1. Register [free Account](https://www.deepl.com/pro)
-2. Visit [Account summary](https://www.deepl.com/pro-account/summary)
-3. Search for Authentication Key for DeepL API
+1. Register [free Pro Account](https://www.deepl.com/pro)
+2. Visit [Your DeepL account](https://www.deepl.com/cs/your-account/keys)
+3. Search for Authentication Key for DeepL API or create new one
 
 ## Install
 
