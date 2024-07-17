@@ -1,6 +1,6 @@
 {
   "name": "om/potrans",
-  "description": "Command line tool for translate Gettext with Google Translator API",
+  "description": "Command line tool for translate Gettext with Google Translator API or Deepl API",
   "keywords": [
     "potrans",
     "gettext",
