@@ -1,3 +1,4 @@
+.env
 cache
 vendor
 tests/*.mo

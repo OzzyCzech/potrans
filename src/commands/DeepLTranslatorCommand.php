@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
+use Dotenv\Dotenv;
 
 class DeepLTranslatorCommand extends Command {
 
@@ -34,6 +35,13 @@ class DeepLTranslatorCommand extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		try {
 
+			// Load .env file if it exists
+			if (file_exists(__DIR__ . '/../../.env')) {
+				$dotenv = Dotenv::createImmutable(__DIR__ . '/../..');
+				$dotenv->load();
+            }
+
+
 			// Input PO file
 			$inputFile = $input->getArgument('input');
 			if (!file_exists($inputFile)) {
@@ -46,20 +54,27 @@ class DeepLTranslatorCommand extends Command {
 				throw new InvalidOptionException('Invalid directory path: ' . $outputDir);
 			}
 
-			// Crete new DeepL translator
-			$customTranslatorPath = $input->getOption('translator');
-			if ($customTranslatorPath && file_exists($customTranslatorPath)) {
-				$translator = require_once $customTranslatorPath;
 
-				if (!$translator instanceof \potrans\translator\Translator) {
-					throw new InvalidOptionException('Invalid translator instance: ' . $customTranslatorPath);
-				}
-			} else {
-				$apikey = (string) $input->getOption('apikey');
-				$translator = new DeepLTranslator(
-					new Translator($apikey),
-				);
-			}
+			// Get API key from .env or command line
+            $apikey = $_ENV['DEEPL_API_KEY'] ?? $input->getOption('apikey');
+
+            if (!$apikey) {
+                throw new InvalidOptionException('DeepL API Key is required. Set it in .env file or use --apikey option.');
+            }
+
+            // Crete new DeepL translator
+            $customTranslatorPath = $input->getOption('translator');
+            if ($customTranslatorPath && file_exists($customTranslatorPath)) {
+                $translator = require_once $customTranslatorPath;
+
+                if (!$translator instanceof \potrans\translator\Translator) {
+                    throw new InvalidOptionException('Invalid translator instance: ' . $customTranslatorPath);
+                }
+            } else {
+                $translator = new DeepLTranslator(
+                    new Translator($apikey),
+                );
+            }
 
 			// Setup caching
 			$cache = $input->getOption('cache') ?
