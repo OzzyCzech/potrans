@@ -25,6 +25,7 @@ class DeepLTranslatorCommand extends Command {
 			->addArgument('output', InputArgument::OPTIONAL, 'Output PO, MO files directory', '~/Downloads')
 			->addOption('from', null, InputOption::VALUE_REQUIRED, 'Source language (default: en)', 'en')
 			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: cs)', 'cs')
+			->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Root directory (default: current working directory)')
 			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('apikey', null, InputOption::VALUE_REQUIRED, 'Deepl API Key')
@@ -35,46 +36,55 @@ class DeepLTranslatorCommand extends Command {
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		try {
 
-			// Load .env file if it exists
-			if (file_exists(__DIR__ . '/../../.env')) {
-				$dotenv = Dotenv::createImmutable(__DIR__ . '/../..');
-				$dotenv->load();
-            }
+			$dir = $input->getOption('dir') ?? getcwd();
 
+			// Load .env file if it exists
+			if (file_exists($dir . '/.env')) {
+				Dotenv::createImmutable($dir)->load();
+			}
 
 			// Input PO file
 			$inputFile = $input->getArgument('input');
+			if ($inputFile[0] !== '/') {
+				$inputFile = $dir . '/' . $inputFile;
+			}
+
 			if (!file_exists($inputFile)) {
 				throw new RuntimeException(sprintf('Input file "%s" not found', $inputFile));
 			}
 
 			// Output directory
-			$outputDir = realpath($input->getArgument('output')) . DIRECTORY_SEPARATOR;
+			$outputDir = $input->getArgument('output');
+			if ($outputDir[0] !== '/') {
+				$outputDir = $dir . '/' . $outputDir;
+			}
+			$outputDir = realpath($outputDir) . DIRECTORY_SEPARATOR;
+
 			if (!is_dir($outputDir)) {
 				throw new InvalidOptionException('Invalid directory path: ' . $outputDir);
 			}
 
 
 			// Get API key from .env or command line
-            $apikey = $_ENV['DEEPL_API_KEY'] ?? $input->getOption('apikey');
+			$apikey = $_ENV['DEEPL_API_KEY'] ?? $input->getOption('apikey');
 
-            if (!$apikey) {
-                throw new InvalidOptionException('DeepL API Key is required. Set it in .env file or use --apikey option.');
-            }
+			if (!$apikey) {
+				throw new InvalidOptionException('DeepL API Key is required. Set it in .env file or use --apikey option.');
+			}
 
-            // Crete new DeepL translator
-            $customTranslatorPath = $input->getOption('translator');
-            if ($customTranslatorPath && file_exists($customTranslatorPath)) {
-                $translator = require_once $customTranslatorPath;
+			// Crete new DeepL translator
+			$customTranslatorPath = $input->getOption('translator');
+			if ($customTranslatorPath && file_exists($customTranslatorPath)) {
+				$translator = require_once $customTranslatorPath;
 
-                if (!$translator instanceof \potrans\translator\Translator) {
-                    throw new InvalidOptionException('Invalid translator instance: ' . $customTranslatorPath);
-                }
-            } else {
-                $translator = new DeepLTranslator(
-                    new Translator($apikey),
-                );
-            }
+				if (!$translator instanceof \potrans\translator\Translator) {
+					throw new InvalidOptionException('Invalid translator instance: ' . $customTranslatorPath);
+				}
+			} else {
+				$translator = new DeepLTranslator(
+					new Translator($apikey),
+				);
+			}
 
 			// Setup caching
 			$cache = $input->getOption('cache') ?
@@ -167,5 +177,4 @@ class DeepLTranslatorCommand extends Command {
 	public function getDescription(): string {
 		return 'Translate PO file with DeepL Translator API';
 	}
-
 }
