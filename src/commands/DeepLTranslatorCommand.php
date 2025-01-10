@@ -22,9 +22,9 @@ class DeepLTranslatorCommand extends Command {
 
 	protected function configure(): void {
 		$this->addArgument('input', InputArgument::REQUIRED, 'Input PO file path')
-			->addArgument('output', InputArgument::OPTIONAL, 'Output PO, MO files directory', '~/Downloads')
+			->addArgument('output', InputArgument::OPTIONAL, 'Output PO, MO files directory')
 			->addOption('from', null, InputOption::VALUE_REQUIRED, 'Source language (default: en)', 'en')
-			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: cs)', 'cs')
+			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: derived from input file name)')
 			->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Root directory (default: current working directory)')
 			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
@@ -54,16 +54,15 @@ class DeepLTranslatorCommand extends Command {
 			}
 
 			// Output directory
-			$outputDir = $input->getArgument('output');
+			$outputDir = $input->getArgument('output') ?? dirname($inputFile);
 			if ($outputDir[0] !== '/') {
 				$outputDir = $dir . '/' . $outputDir;
 			}
-			$outputDir = realpath($outputDir) . DIRECTORY_SEPARATOR;
+			$outputDir = rtrim(realpath($outputDir), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 			if (!is_dir($outputDir)) {
 				throw new InvalidOptionException('Invalid directory path: ' . $outputDir);
 			}
-
 
 			// Get API key from .env or command line
 			$apikey = $_ENV['DEEPL_API_KEY'] ?? $input->getOption('apikey');
@@ -93,7 +92,7 @@ class DeepLTranslatorCommand extends Command {
 
 			// Read params
 			$force = (bool) $input->getOption('force');
-			$to = (string) $input->getOption('to');
+			$to = (string) ($input->getOption('to') ?? basename($inputFile, '.po'));
 			$from = (string) $input->getOption('from');
 			$wait = (int) $input->getOption('wait');
 
