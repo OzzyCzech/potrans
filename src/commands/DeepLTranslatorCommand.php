@@ -27,6 +27,7 @@ class DeepLTranslatorCommand extends Command {
 			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: derived from input file name)')
 			->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Root directory (default: current working directory)')
 			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
+			->addOption('only', null, InputOption::VALUE_NONE, 'Create only PO file, no MO file')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('apikey', null, InputOption::VALUE_REQUIRED, 'Deepl API Key')
 			->addOption('translator', null, InputOption::VALUE_OPTIONAL, 'Path to custom translator instance', null)
@@ -145,11 +146,13 @@ class DeepLTranslatorCommand extends Command {
 			$output->writeln('<comment>Translated :</comment> ' . $translated . ' sentences');
 
 			// MO file output
-			$moOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
-			if ($output->isVeryVerbose()) {
-				$output->writeln('<comment>Writing new MO File</comment>: ' . $moOutputFile);
+			if(!$input->getOption('only')) {
+				$moOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
+				if ($output->isVeryVerbose()) {
+					$output->writeln('<comment>Writing new MO File</comment>: ' . $moOutputFile);
+				}
+				$potrans->saveMoFile($moOutputFile);
 			}
-			$potrans->saveMoFile($moOutputFile);
 
 			// PO file output
 			$poOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.po';
