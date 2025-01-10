@@ -21,10 +21,12 @@ class GoogleTranslatorCommand extends Command {
 
 	protected function configure(): void {
 		$this->addArgument('input', InputArgument::REQUIRED, 'Input PO file path')
-			->addArgument('output', InputArgument::OPTIONAL, 'Output PO, MO files directory', '~/Downloads')
+			->addArgument('output', InputArgument::OPTIONAL, 'Output PO, MO files directory')
 			->addOption('from', null, InputOption::VALUE_REQUIRED, 'Source language (default: en)', 'en')
-			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: cs)', 'cs')
+			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: derived from input file name)')
+			->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Root directory (default: current working directory)')
 			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
+			->addOption('only', null, InputOption::VALUE_NONE, 'Create only PO file, no MO file')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('credentials', null, InputOption::VALUE_REQUIRED, 'Path to Google Credentials file', './credentials.json')
 			->addOption('project', null, InputOption::VALUE_REQUIRED, 'Google Cloud Project ID <comment>[default: project_id from credentials.json]</comment>')
@@ -37,14 +39,25 @@ class GoogleTranslatorCommand extends Command {
 
 		try {
 
+			$dir = $input->getOption('dir') ?? getcwd();
+
 			// Input PO file
 			$inputFile = $input->getArgument('input');
+			if ($inputFile[0] !== '/') {
+				$inputFile = $dir . '/' . $inputFile;
+			}
+
 			if (!file_exists($inputFile)) {
 				throw new RuntimeException(sprintf('Input file "%s" not found', $inputFile));
 			}
 
 			// Output directory
-			$outputDir = realpath($input->getArgument('output')) . DIRECTORY_SEPARATOR;
+			$outputDir = $input->getArgument('output') ?? dirname($inputFile);
+			if ($outputDir[0] !== '/') {
+				$outputDir = $dir . '/' . $outputDir;
+			}
+			$outputDir = rtrim(realpath($outputDir), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+
 			if (!is_dir($outputDir)) {
 				throw new InvalidOptionException('Invalid directory path: ' . $outputDir);
 			}
@@ -132,11 +145,13 @@ class GoogleTranslatorCommand extends Command {
 			$output->writeln('<comment>Translated :</comment> ' . $translated . ' sentences');
 
 			// MO file output
-			$moOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
-			if ($output->isVeryVerbose()) {
-				$output->writeln('<comment>Writing new MO File</comment>: ' . $moOutputFile);
+			if(!$input->getOption('only')) {
+				$moOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
+				if ($output->isVeryVerbose()) {
+					$output->writeln('<comment>Writing new MO File</comment>: ' . $moOutputFile);
+				}
+				$potrans->saveMoFile($moOutputFile);
 			}
-			$potrans->saveMoFile($moOutputFile);
 
 			// PO file output
 			$poOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.po';

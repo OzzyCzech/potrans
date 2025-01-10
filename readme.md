@@ -22,16 +22,18 @@ Description:
   Translate PO file with Google Translator API
 
 Usage:
-  google [options] [--] <input> [<output>] 
+  google [options] [--] <input> [<output>]
 
 Arguments:
   input                          Input PO file path
-  output                         Output PO, MO files directory [default: "~/Downloads"]
+  output                         Output PO, MO files directory [default: input file directory]
 
 Options:
       --from=FROM                Source language (default: en) [default: "en"]
-      --to=TO                    Target language (default: cs) [default: "cs"]
+      --to=TO                    Target language (default: cs) [default: derived from input file name]
+      --dir=DIR                  Root directory (default: current working directory)
       --force                    Force re-translate including translated sentences
+      --only                     Create only PO file, no MO file
       --wait=WAIT                Wait between translations in milliseconds [default: false]
       --credentials=CREDENTIALS  Path to Google Credentials file [default: "./credentials.json"]
       --project=PROJECT          Google Cloud Project ID [default: project_id from credentials.json]
@@ -103,12 +105,14 @@ Usage:
 
 Arguments:
   input                          Input PO file path
-  output                         Output PO, MO files directory [default: "~/Downloads"]
+  output                         Output PO, MO files directory [default: input file directory]
 
 Options:
       --from=FROM                Source language (default: en) [default: "en"]
-      --to=TO                    Target language (default: cs) [default: "cs"]
+      --to=TO                    Target language (default: cs) [default: derived from input file name]
+      --dir=DIR                  Root directory (default: current working directory)
       --force                    Force re-translate including translated sentences
+      --only                     Create only PO file, no MO file
       --wait=WAIT                Wait between translations in milliseconds [default: false]
       --apikey=APIKEY            Deepl API Key
       --translator[=TRANSLATOR]  Path to custom translator instance
@@ -179,7 +183,7 @@ class CustomTranslator implements \potrans\translator\Translator {
   // TODO add your code
 }
 
-return new CustomTranslator(); 
+return new CustomTranslator();
 ```
 
 You can find an example custom translator in the file [DeepLTranslatorEscaped.php](https://github.com/OzzyCzech/potrans/blob/master/src/translator/DeepLTranslatorEscaped.php)
