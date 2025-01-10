@@ -93,7 +93,7 @@ class DeepLTranslatorCommand extends Command {
 
 			// Read params
 			$force = (bool) $input->getOption('force');
-			$to = (string) ($input->getOption('to') ?? basename($inputFile, '.po'));
+			$to = (string) str_replace('_', '-', $input->getOption('to') ?? basename($inputFile, '.po'));
 			$from = (string) $input->getOption('from');
 			$wait = (int) $input->getOption('wait');
 
