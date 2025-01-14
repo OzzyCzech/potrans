@@ -11,6 +11,16 @@
 Potrans it's PHP command line tool for automatic translation of [Gettext](https://www.gnu.org/software/gettext/) PO file with
 [Google Translator](https://cloud.google.com/translate) or [DeepL Translator](https://www.deepl.com/).
 
+## Install
+
+You can add `om/potrans` to you PHP project like follow:
+
+```shell
+composer require --dev om/potrans
+```
+
+or you can clone this repository and then run `./bin/potrans`
+
 ## Google Translator
 
 ```shell
@@ -153,16 +163,6 @@ You can use environment variables to set DeepL API key.
 ```dotenv:.env
 DEEPL_API_KEY=your-deepl-api-key
 ```
-
-## Install
-
-You can add `om/potrans` to you PHP project like follow:
-
-```shell
-composer require --dev om/potrans
-```
-
-or you can clone this repository and then run `./bin/potrans`
 
 ## Custom translator
 
