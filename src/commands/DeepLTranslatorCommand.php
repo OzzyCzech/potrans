@@ -88,7 +88,7 @@ class DeepLTranslatorCommand extends Command {
 
 			// Setup caching
 			$cache = $input->getOption('cache') ?
-				new FilesystemAdapter('deepl', 3600, 'cache') :
+				new FilesystemAdapter('deepl', 3600, '.potrans/cache') :
 				new NullAdapter();
 
 			// Read params
