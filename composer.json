@@ -27,10 +27,10 @@
     "bin/potrans"
   ],
   "require": {
-    "symfony/console": "^6.0",
     "gettext/gettext": "^5.6",
     "google/cloud-translate": "^1.12",
-    "symfony/cache": "^6.0",
+    "symfony/console": "^6.0||^7.0",
+    "symfony/cache": "^6.0||^7.0",
     "deeplcom/deepl-php": "^1.2",
     "vlucas/phpdotenv": "^5.6"
   },
