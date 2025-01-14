@@ -86,7 +86,7 @@ class GoogleTranslatorCommand extends Command {
 
 			// Setup caching
 			$cache = $input->getOption('cache') ?
-				new FilesystemAdapter('google', 3600, 'cache') :
+				new FilesystemAdapter('google', 3600, '.potrans/cache') :
 				new NullAdapter();
 
 			// Read params
