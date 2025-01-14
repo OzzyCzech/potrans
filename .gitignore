@@ -1,5 +1,5 @@
 .env
-cache
+.potrans
 vendor
 tests/*.mo
 composer.lock
