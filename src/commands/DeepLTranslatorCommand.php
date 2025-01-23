@@ -96,15 +96,15 @@ class DeepLTranslatorCommand extends Command {
 			$from = strtoupper((string) $input->getOption('from'));
 			$wait = (int) $input->getOption('wait');
 
+			if($from === $to) {
+				return Command::SUCCESS;
+			}
+
 			$to = match($to) {
 				'EN' => 'EN-GB',
 				'PT' => 'PT-PT',
 				default => $to,
 			};
-
-			if($from === $to) {
-				return Command::SUCCESS;
-			}
 
 			$potrans = new PoTranslator($translator, $cache);
 			$translations = $potrans->loadFile($inputFile);
