@@ -36,7 +36,6 @@ class DeepLTranslatorCommand extends Command {
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
 		try {
-
 			$dir = $input->getOption('dir') ?? getcwd();
 
 			// Load .env file if it exists
@@ -72,7 +71,7 @@ class DeepLTranslatorCommand extends Command {
 				throw new InvalidOptionException('DeepL API Key is required. Set it in .env file or use --apikey option.');
 			}
 
-			// Crete new DeepL translator
+			// Create new DeepL translator
 			$customTranslatorPath = $input->getOption('translator');
 			if ($customTranslatorPath && file_exists($customTranslatorPath)) {
 				$translator = require_once $customTranslatorPath;
@@ -93,9 +92,19 @@ class DeepLTranslatorCommand extends Command {
 
 			// Read params
 			$force = (bool) $input->getOption('force');
-			$to = (string) str_replace('_', '-', $input->getOption('to') ?? basename($inputFile, '.po'));
-			$from = (string) $input->getOption('from');
+			$to = strtoupper((string) str_replace('_', '-', $input->getOption('to') ?? basename($inputFile, '.po')));
+			$from = strtoupper((string) $input->getOption('from'));
 			$wait = (int) $input->getOption('wait');
+
+			if($from === $to) {
+				return Command::SUCCESS;
+			}
+
+			$to = match($to) {
+				'EN' => 'EN-GB',
+				'PT' => 'PT-PT',
+				default => $to,
+			};
 
 			$potrans = new PoTranslator($translator, $cache);
 			$translations = $potrans->loadFile($inputFile);
