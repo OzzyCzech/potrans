@@ -27,6 +27,7 @@ class DeepLTranslatorCommand extends Command {
 			->addOption('to', null, InputOption::VALUE_REQUIRED, 'Target language (default: derived from input file name)')
 			->addOption('dir', null, InputOption::VALUE_REQUIRED, 'Root directory (default: current working directory)')
 			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
+			->addOption('ignore', null, InputOption::VALUE_REQUIRED, 'Regular expression to ignore parts of the text', null)
 			->addOption('only', null, InputOption::VALUE_NONE, 'Create only PO file, no MO file')
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('apikey', null, InputOption::VALUE_REQUIRED, 'Deepl API Key')
@@ -82,6 +83,7 @@ class DeepLTranslatorCommand extends Command {
 			} else {
 				$translator = new DeepLTranslator(
 					new Translator($apikey),
+					$input->getOption('ignore')
 				);
 			}
 
@@ -109,18 +111,25 @@ class DeepLTranslatorCommand extends Command {
 			$potrans = new PoTranslator($translator, $cache);
 			$translations = $potrans->loadFile($inputFile);
 
+			$lines = [
+				'------------------------------',
+				' PO trans translator',
+				'------------------------------',
+				'<comment>Input</comment>: ' . $inputFile,
+				'<comment>Translate</comment>: from ' . $from . ' to ' . $to,
+				'<comment>Output dir</comment>: ' . $outputDir,
+			];
+
+			if ($ignore = $input->getOption('ignore')) {
+				$lines[] = '<comment>Ignore</comment>: ' . $ignore;
+			}
+
+			if ($output->isVeryVerbose()) {
+				$lines[] = '<comment>Translating progress</comment>:';
+			}
+
 			// translator
-			$output->writeln(
-				[
-					'------------------------------',
-					' PO trans translator',
-					'------------------------------',
-					'<comment>Input</comment>: ' . $inputFile,
-					'<comment>Translate</comment>: from ' . $from . ' to ' . $to,
-					'<comment>Output dir</comment>: ' . $outputDir,
-					'<comment>Translating progress</comment>:',
-				]
-			);
+			$output->writeln($lines);
 
 			$progress = new ProgressBar($output, count($translations));
 
