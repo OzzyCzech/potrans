@@ -29,6 +29,7 @@ class DeepLTranslatorCommand extends Command {
 			->addOption('force', null, InputOption::VALUE_NONE, 'Force re-translate including translated sentences')
 			->addOption('ignore', null, InputOption::VALUE_REQUIRED, 'Regular expression to ignore parts of the text', null)
 			->addOption('only', null, InputOption::VALUE_NONE, 'Create only PO file, no MO file')
+			->addOption('pot', null, InputOption::VALUE_REQUIRED, 'POT file path for mapping translations', null)
 			->addOption('wait', null, InputOption::VALUE_REQUIRED, 'Wait between translations in milliseconds', false)
 			->addOption('apikey', null, InputOption::VALUE_REQUIRED, 'Deepl API Key')
 			->addOption('translator', null, InputOption::VALUE_OPTIONAL, 'Path to custom translator instance', null)
@@ -65,6 +66,16 @@ class DeepLTranslatorCommand extends Command {
 				throw new InvalidOptionException('Invalid directory path: ' . $outputDir);
 			}
 
+			// Input POT file
+			$potTrans = null;
+			if ($potFile = $input->getOption('pot')) {
+				if ($potFile[0] !== '/') {
+					$potFile = $dir . '/' . $potFile;
+				}
+
+				$potTrans = (new \Gettext\Loader\PoLoader())->loadFile($potFile);
+			}
+
 			// Get API key from .env or command line
 			$apikey = $_ENV['DEEPL_API_KEY'] ?? $input->getOption('apikey');
 
@@ -83,6 +94,7 @@ class DeepLTranslatorCommand extends Command {
 			} else {
 				$translator = new DeepLTranslator(
 					new Translator($apikey),
+					$potTrans,
 					$input->getOption('ignore')
 				);
 			}
