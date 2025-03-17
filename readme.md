@@ -8,12 +8,12 @@
 
 # PO file translator
 
-Potrans it's PHP command line tool for automatic translation of [Gettext](https://www.gnu.org/software/gettext/) PO file with
-[Google Translator](https://cloud.google.com/translate) or [DeepL Translator](https://www.deepl.com/).
+Potrans is a PHP command line tool for automatic translation of [Gettext](https://www.gnu.org/software/gettext/) PO
+files with [Google Translator](https://cloud.google.com/translate) or [DeepL Translator](https://www.deepl.com/).
 
 ## Install
 
-You can add `om/potrans` to you PHP project like follow:
+You can add `om/potrans` to your PHP project as follows:
 
 ```shell
 composer require --dev om/potrans
@@ -60,7 +60,8 @@ Options:
 
 ### Example commands
 
-Follow command will translate whole content of `tests/example-cs_CZ.po` from English (default) to Czech language (default):
+Follow command will translate whole content of `tests/example-cs_CZ.po` from English (default) to Czech language (
+default):
 
 ```bash
 bin/potrans google tests/example-cs_CZ.po ~/Downloads \
@@ -78,8 +79,8 @@ bin/potrans google tests/example-cs_CZ.po ~/Downloads \
 
 ### Google Translate API Pricing
 
-Google Translate API pricing is based on usage. Translation usage is calculated in millions
-of characters (M), where 1 M = 10^6 characters. For more information, see the
+Google Translate API pricing is based on usage. Translation usage is calculated in millions of characters (M), where 1
+M = 10^6 characters. For more information, see the
 [Pricing FAQ](https://cloud.google.com/translate/pricing).
 
 * [Translaton API](https://cloud.google.com/translate)
@@ -91,7 +92,8 @@ of characters (M), where 1 M = 10^6 characters. For more information, see the
 1. Open [Google Cloud Console](https://console.cloud.google.com/) website
 2. Create a new **Project** (or select existing one)
 3. Search for [translate API](https://cloud.google.com/translate/docs/apis) and enable it then
-4. Go to [IAM & Admin](https://console.cloud.google.com/iam-admin/iam) > *Service Accounts* and click to **+ Create service account**
+4. Go to [IAM & Admin](https://console.cloud.google.com/iam-admin/iam) > *Service Accounts* and click to **+ Create
+   service account**
 5. Chose *Service account name* and *Service account ID* and click to **Create and continue**
 6. Grant this service account access to project and add follow roles **Cloud Translation API Editor**, **AutoML Editor**
 7. Create new Keys and **download credentials JSON file**
@@ -144,21 +146,20 @@ bin/potrans deepl tests/example-cs_CZ.po ~/Downloads --apikey=123456
 
 ### DeepL Translator API pricing
 
-DeepL translator [API pricing](https://www.deepl.com/pro-api) is based on monthly subscription.
-There is max. 500,000 characters/month for free.
+DeepL Translator [API pricing](https://www.deepl.com/pro-api) is based on a monthly subscription. There is a maximum of
+500,000 characters/month for free.
 
-For more information visit https://www.deepl.com/pro-api
+For more information, visit [DeepL Pro API](https://www.deepl.com/pro-api).
 
 ### Getting Api Key
 
 1. Register [free Account](https://www.deepl.com/pro)
 2. Visit [Account summary](https://www.deepl.com/pro-account/summary)
-3. Search for Authentication Key for DeepL API
-
+3. Find the Authentication Key for the DeepL API.
 
 ### Environment variables
 
-You can use environment variables to set DeepL API key.
+You can use environment variables to set the DeepL API key.
 
 ```dotenv:.env
 DEEPL_API_KEY=your-deepl-api-key
@@ -166,8 +167,8 @@ DEEPL_API_KEY=your-deepl-api-key
 
 ## Custom translator
 
-If you need to use a custom translator that behaves differently than the original translator.
-You have the option to use the `--translator` parameter like follow:
+If you need to use a custom translator that behaves differently than the original translator, you have the option to use
+the `--translator` parameter as follows:
 
 ```shell
 ./bin/potrans deepl ./tests/example-cs_CZ.po ~/Downloads \
@@ -186,7 +187,8 @@ class CustomTranslator implements \potrans\translator\Translator {
 return new CustomTranslator();
 ```
 
-You can find an example custom translator in the file [DeepLTranslatorEscaped.php](https://github.com/OzzyCzech/potrans/blob/master/src/translator/DeepLTranslatorEscaped.php)
+You can find an example custom translator in the
+file [DeepLTranslatorEscaped.php](https://github.com/OzzyCzech/potrans/blob/master/src/translator/DeepLTranslatorEscaped.php)
 
 ## Potrans development
 
@@ -194,32 +196,34 @@ You can find an example custom translator in the file [DeepLTranslatorEscaped.ph
 2. Run `composer install` for install all dependencies
 3. Install PHP Curl extension (curl and json PHP extensions)
 
-For more information about Composer visit: [https://getcomposer.org](https://getcomposer.org)
+For more information about Composer, visit: https://getcomposer.org
 
-If you had `"command not found: potrans"` return, just run the command like this: `php bin/potrans` and will run without problems.
+If you get `"command not found: potrans"`, just run the command like this: `php bin/potrans` and it will run without
+problems.
 
 ## Troubleshooting
 
 #### cURL error: SSL certificate issue (Google Translate only)
 
-You may encounter a problem caused by cURL like follow:
+You may encounter a problem caused by cURL like the following:
 
 ```text
 cURL error 60: SSL certificate problem: unable to get local issuer certificate (see https://curl.haxx.se/libcurl/c/libcurl-errors.html)
 ```
 
-There is missing issuer certificate `cacert.pem` file and curl won't verify SSL requests:
+This is due to a missing issuer certificate `cacert.pem` file, and curl won't verify SSL requests:
 
 1. Download [http://curl.haxx.se/ca/cacert.pem](http://curl.haxx.se/ca/cacert.pem)
-2. Save is somewhere e.g. `/usr/local/etc/cacert.pem`
-3. Update your `php.ini` with following:
+2. Save is somewhere, e.g. `/usr/local/etc/cacert.pem`
+3. Update your `php.ini` with the following:
 
 ```ini
 curl.cainfo = "/usr/local/etc/cacert.pem"
 openssl.cafile = "/usr/local/etc/cacert.pem"
 ```
 
-You can verify it with `phpinfo()` or `php --info`. Read more detailed [instruction here](https://stackoverflow.com/a/32095378/355316).
+You can verify it with `phpinfo()` or `php --info`. Read more
+detailed [instruction here](https://stackoverflow.com/a/32095378/355316).
 
 ## Links
 
