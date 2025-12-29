@@ -1,6 +1,8 @@
 <?php
-
 namespace potrans;
+
+// Disable deprecated warnings
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 use potrans\commands\DeepLTranslatorCommand;
 use potrans\commands\GoogleTranslatorCommand;
