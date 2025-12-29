@@ -3,6 +3,7 @@
 namespace potrans\commands;
 
 use DeepL\Translator;
+use Gettext\Loader\PoLoader;
 use potrans\PoTranslator;
 use potrans\translator\DeepLTranslator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -73,7 +74,7 @@ class DeepLTranslatorCommand extends Command {
 					$potFile = $dir . '/' . $potFile;
 				}
 
-				$potTrans = (new \Gettext\Loader\PoLoader())->loadFile($potFile);
+				$potTrans = new PoLoader()->loadFile($potFile);
 			}
 
 			// Get API key from .env or command line
