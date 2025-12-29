@@ -141,7 +141,7 @@ Options:
 ### Example commands
 
 ```shell
-bin/potrans deepl tests/example-cs_CZ.po ~/Downloads --apikey=123456
+bin/potrans deepl tests/example-cs_CZ.po ~/Downloads --from=CS --to=EN --apikey=123456
 ```
 
 ### DeepL Translator API pricing
