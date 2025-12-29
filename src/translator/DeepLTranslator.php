@@ -2,22 +2,26 @@
 
 namespace potrans\translator;
 
+ use DeepL\DeepLException;
 use Gettext\Translation;
+use Gettext\Translations;
 
 class DeepLTranslator extends TranslatorAbstract {
 
 	private \DeepL\Translator $translator;
-	private ?\Gettext\Translations $pot;
+	private ?Translations $pot;
 	private ?string $regex;
 
-	public function __construct(\DeepL\Translator $translator, \Gettext\Translations $pot = null, string $regex = null) {
+	public function __construct(\DeepL\Translator $translator, ?Translations $pot = null, ?string $regex = null) {
 		$this->translator = $translator;
 		$this->regex = $regex;
 		$this->pot = $pot;
 	}
 
 	/**
-	 * @throws \DeepL\DeepLException
+	 * @param Translation $sentence
+	 * @throws DeepLException
+	 * @return string
 	 */
 	public function getTranslation(Translation $sentence): string {
 		$text = $this->pot?->find($sentence->getContext(), $sentence->getOriginal())?->getTranslation() ?: $sentence->getOriginal();
