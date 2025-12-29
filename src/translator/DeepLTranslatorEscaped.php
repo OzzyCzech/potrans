@@ -2,7 +2,10 @@
 
 namespace potrans\translator;
 
+use DeepL\DeepLException;
 use Gettext\Translation;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * There are two global variable $input and $output
@@ -11,8 +14,8 @@ use Gettext\Translation;
  *
  * ./bin/potrans deepl ./tests/example-cs_CZ.po ~/Downloads --apikey=123456 --translator=src/translator/DeepLTranslatorEscaped.php --no-cache -vvv
  *
- * @var \Symfony\Component\Console\Input\InputInterface $input
- * @var \Symfony\Component\Console\Output\OutputInterface $output
+ * @var InputInterface $input
+ * @var OutputInterface $output
  * @see \potrans\commands\DeepLTranslatorCommand for more information
  */
 class DeepLTranslatorEscaped extends TranslatorAbstract {
@@ -24,7 +27,7 @@ class DeepLTranslatorEscaped extends TranslatorAbstract {
 	}
 
 	/**
-	 * @throws \DeepL\DeepLException
+	 * @throws DeepLException
 	 */
 	public function getTranslation(Translation $sentence): string {
 		$response = $this->translator->translateText(
