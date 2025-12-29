@@ -2,7 +2,7 @@
 
 namespace potrans\commands;
 
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 use potrans\PoTranslator;
 use potrans\translator\GoogleTranslator;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -78,7 +78,9 @@ class GoogleTranslatorCommand extends Command {
 				}
 			} else {
 				$translator = new GoogleTranslator(
-					new TranslationServiceClient(['credentials' => $credentials]),
+					new TranslationServiceClient([
+						'credentials' => $credentials,
+					]),
 					$input->getOption('project') ?? json_decode(file_get_contents($credentials))->project_id,
 					$input->getOption('location')
 				);
@@ -145,7 +147,7 @@ class GoogleTranslatorCommand extends Command {
 			$output->writeln('<comment>Translated :</comment> ' . $translated . ' sentences');
 
 			// MO file output
-			if(!$input->getOption('only')) {
+			if (!$input->getOption('only')) {
 				$moOutputFile = $outputDir . pathinfo($inputFile, PATHINFO_FILENAME) . '.mo';
 				if ($output->isVeryVerbose()) {
 					$output->writeln('<comment>Writing new MO File</comment>: ' . $moOutputFile);
