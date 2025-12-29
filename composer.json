@@ -1,6 +1,6 @@
 {
   "name": "om/potrans",
-  "description": "Command line tool for translate Gettext with Google Translator API or Deepl API",
+  "description": "Command line tool for translate Gettext with Google Translator API or DeepL API",
   "keywords": [
     "potrans",
     "gettext",
@@ -27,15 +27,15 @@
     "bin/potrans"
   ],
   "require": {
-    "gettext/gettext": "^5.6",
-    "google/cloud-translate": "^1.12",
-    "symfony/console": "^6.0||^7.0",
-    "symfony/cache": "^6.0||^7.0",
-    "deeplcom/deepl-php": "^1.2",
+    "gettext/gettext": "^5.7",
+    "google/cloud-translate": "^2.1",
+    "symfony/console": "^8.0",
+    "symfony/cache": "^8.0",
+    "deeplcom/deepl-php": "^1.16",
     "vlucas/phpdotenv": "^5.6"
   },
   "require-dev": {
-    "nette/tester": "^2.4"
+    "nette/tester": "^2.5"
   },
   "autoload": {
     "psr-4": {
