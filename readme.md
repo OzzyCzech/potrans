@@ -141,7 +141,7 @@ Options:
 ### Example commands
 
 ```shell
-bin/potrans deepl tests/example-cs_CZ.po ~/Downloads --from=CS --to=EN --apikey=123456
+bin/potrans deepl tests/example-cs_CZ.po ~/Downloads --from=en --to=cs --apikey=<your-deepl-api-key> -vvv
 ```
 
 ### DeepL Translator API pricing
@@ -162,7 +162,7 @@ For more information, visit [DeepL Pro API](https://www.deepl.com/pro-api).
 You can use environment variables to set the DeepL API key.
 
 ```dotenv:.env
-DEEPL_API_KEY=your-deepl-api-key
+DEEPL_API_KEY=<your-deepl-api-key>
 ```
 
 ## Custom translator
@@ -173,7 +173,7 @@ the `--translator` parameter as follows:
 ```shell
 ./bin/potrans deepl ./tests/example-cs_CZ.po ~/Downloads \
     --translator=path/to/my/CustomTranslator.php \
-    --apikey=123456
+    --apikey=<your-deepl-api-key>
 ```
 
 PHP file should contain implementation of `Translator` interface and should return new instance:
