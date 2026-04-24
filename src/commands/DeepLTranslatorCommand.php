@@ -74,7 +74,7 @@ class DeepLTranslatorCommand extends Command {
 					$potFile = $dir . '/' . $potFile;
 				}
 
-				$potTrans = new PoLoader()->loadFile($potFile);
+				$potTrans = (new PoLoader())->loadFile($potFile);
 			}
 
 			// Get API key from .env or command line
