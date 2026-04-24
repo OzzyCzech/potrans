@@ -25,6 +25,7 @@ class DeepLTranslator extends TranslatorAbstract {
 	 */
 	public function getTranslation(Translation $sentence): string {
 		$text = $this->pot?->find($sentence->getContext(), $sentence->getOriginal())?->getTranslation() ?: $sentence->getOriginal();
+		$text = htmlentities($text, ENT_SUBSTITUTE, 'UTF-8');
 		$response = $this->translator->translateText(
 			$this->regex ? preg_replace('/(' . $this->regex . ')/', '<keep>$1</keep>', $text) : $text,
 			$this->from,
@@ -35,6 +36,6 @@ class DeepLTranslator extends TranslatorAbstract {
 			]
 		);
 
-		return preg_replace('/<\/?keep>/i', '', $response->text);
+		return html_entity_decode(preg_replace('/<\/?keep>/i', '', $response->text), ENT_SUBSTITUTE, 'UTF-8');
 	}
 }
