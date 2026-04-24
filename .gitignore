@@ -2,5 +2,6 @@
 .potrans
 vendor
 tests/*.mo
+tests/temp
 composer.lock
 credentials.json
