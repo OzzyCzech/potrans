@@ -118,6 +118,7 @@ class DeepLTranslatorCommand extends Command {
 			$to = match($to) {
 				'EN' => 'EN-GB',
 				'PT' => 'PT-PT',
+				'NO' => 'NB',
 				default => $to,
 			};
 
