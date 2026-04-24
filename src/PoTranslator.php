@@ -72,15 +72,22 @@ class PoTranslator {
 
 				if (!$translation->isHit()) {
 
-					$translation->set(
-						$this->translator
-							->from($from)
-							->to($to)
-							->getTranslation($sentence)
-					);
+					try {
+						$translation->set(
+							$this->translator
+								->from($from)
+								->to($to)
+								->getTranslation($sentence)
+						);
 
-					// save cache
-					$this->cache->save($translation);
+						// save cache
+						$this->cache->save($translation);
+					} catch (\DeepL\TooManyRequestsException $e) {
+						sleep(1);
+						continue;
+					} catch (\DeepL\DeepLException $e) {
+						continue;
+					}
 				}
 
 				$sentence->translate($translation->get());
