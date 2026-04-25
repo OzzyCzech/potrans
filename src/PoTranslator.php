@@ -29,7 +29,7 @@ class PoTranslator {
 	 * @return Translations
 	 */
 	public function loadFile(string $filename): Translations {
-		return $this->sentences = (new PoLoader())->loadFile($filename);
+		return $this->sentences = new PoLoader()->loadFile($filename);
 	}
 
 	/**
@@ -39,7 +39,7 @@ class PoTranslator {
 	 * @return bool
 	 */
 	public function saveMoFile(string $filename): bool {
-		return (new MoGenerator())->generateFile($this->sentences, $filename);
+		return new MoGenerator()->generateFile($this->sentences, $filename);
 	}
 
 	/**
@@ -49,7 +49,7 @@ class PoTranslator {
 	 * @return bool
 	 */
 	public function savePoFile(string $filename): bool {
-		return (new PoGenerator())->generateFile($this->sentences, $filename);
+		return new PoGenerator()->generateFile($this->sentences, $filename);
 	}
 
 	/**
@@ -84,8 +84,6 @@ class PoTranslator {
 						$this->cache->save($translation);
 					} catch (\DeepL\TooManyRequestsException $e) {
 						sleep(1);
-						continue;
-					} catch (\DeepL\DeepLException $e) {
 						continue;
 					}
 				}
