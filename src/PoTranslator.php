@@ -85,8 +85,6 @@ class PoTranslator {
 					} catch (\DeepL\TooManyRequestsException $e) {
 						sleep(1);
 						continue;
-					} catch (\DeepL\DeepLException $e) {
-						continue;
 					}
 				}
 
